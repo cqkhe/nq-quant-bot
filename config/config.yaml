@@ -1,0 +1,148 @@
+# ============================================================
+# Configuración central de nqbot
+# Todo parámetro tunable vive acá: el código no tiene números mágicos.
+# ============================================================
+
+account:
+  initial_capital: 25000.0   # USD
+
+# Especificación de contratos CME (valores oficiales del exchange).
+# point_value = USD por punto entero de índice; tick = 0.25 pts.
+contracts:
+  NQ:
+    tick_size: 0.25
+    point_value: 20.0          # 1 tick = $5.00
+    commission_per_side: 1.55  # por contrato, aprox retail (ajustar al broker)
+  MNQ:
+    tick_size: 0.25
+    point_value: 2.0           # 1 tick = $0.50
+    commission_per_side: 0.79
+
+risk:
+  risk_per_trade_pct: 0.5      # % del equity arriesgado por operación
+  max_daily_loss_pct: 2.0      # pérdida máxima diaria (% del equity al abrir la sesión) -> bloqueo
+  max_trades_per_day: 5        # cantidad máxima de entradas por sesión
+  max_consecutive_losses: 3    # racha de pérdidas que dispara bloqueo por el resto del día
+  max_contracts: 10            # techo absoluto de contratos por operación
+  max_stop_points: 100.0       # si el stop técnico queda más lejos que esto, la señal se descarta
+
+execution:
+  slippage_ticks: 1            # slippage por lado en órdenes de mercado / stop-market
+  spread_ticks: 1              # spread bid/ask estimado (MNQ ~1 tick en RTH):
+                               # cada fill a MERCADO paga medio spread extra;
+                               # las órdenes límite (target) no lo pagan
+
+# Horarios en hora del exchange (ET). Los datos se asumen ya en ET.
+# Sesiones CME Globex del Nasdaq Futures:
+#   overnight: 18:00 -> 04:00 (cruza medianoche; abre el día anterior)
+#   premarket: 04:00 -> 09:30
+#   regular:   09:30 -> 16:00 (RTH)
+session:
+  timezone: America/New_York
+  globex_open: "18:00"         # reapertura diaria (domingo abre la semana)
+  globex_close: "17:00"        # cierre de mantenimiento diario
+  premarket_start: "04:00"
+  rth_start: "09:30"
+  rth_end: "16:00"
+  trade_session: regular       # ventana operada: regular | premarket | overnight | all
+                               # (los datos fuera de la ventana se filtran antes del backtest)
+  entry_start: "09:45"         # sin entradas en los primeros 15 min (apertura errática)
+  entry_cutoff: "15:15"        # sin entradas nuevas cerca del cierre
+  flatten_time: "15:50"        # cierre forzado de posiciones dentro de la ventana operada
+
+# Control de calidad de datos: si un problema supera su umbral es ERROR y el
+# backtest NO corre (genera reports/data_quality_report.txt con el detalle).
+# Por debajo del umbral queda como WARNING y el saneador lo repara/descarta.
+data_quality:
+  max_missing_bars_pct: 5.0    # % de velas faltantes tolerado en la ventana activa
+  max_duplicate_pct: 1.0       # % de timestamps duplicados
+  max_nan_pct: 1.0             # % de filas con OHLC nulo
+  max_incoherent_pct: 0.5      # % de filas con OHLC imposible o precios <= 0
+  max_zero_volume_pct: 5.0     # % de barras con volumen 0 en la ventana activa
+  max_gap_minutes: 5           # gap intra-sesión que se reporta como evento
+  max_bar_return_pct: 5.0      # salto barra-a-barra sospechoso de bad tick
+  max_weekend_bars_pct: 0.1    # barras espurias de finde toleradas (quedan como WARNING
+                               # y se ignoran); por encima sugiere timezone corrida -> ERROR
+
+# Calendario del exchange (CME, hora ET). Sábados y domingos nunca cuentan
+# como sesiones RTH esperadas: no hace falta declararlos.
+calendar:
+  # Fechas SIN sesión (exchange cerrado): no se esperan velas ese día.
+  no_session: []
+  #  - "2026-12-25"
+  # Cierres anticipados (sesión parcial): fecha -> última hora esperada (ET).
+  # El faltante posterior a esa hora NO cuenta como velas faltantes.
+  partial_session:
+    "2026-06-19": "13:00"      # Juneteenth: cierre anticipado de futuros de índices
+    "2026-07-03": "13:00"      # víspera del 4 de Julio: cierre anticipado
+
+strategy:
+  base_vwap_ema:
+    ema_fast: 13
+    ema_mid: 25
+    ema_slow: 55
+    ema_trend: 200
+    vol_window: 20             # ventana del volumen relativo
+    rel_volume_threshold: 1.05 # volumen de la barra de entrada >= 1.05x el promedio
+    pullback_lookback: 10      # barras hacia atrás para detectar pullback a valor
+    swing_k: 3                 # fractal k barras a cada lado para swings confirmados
+    rr: 2.0                    # take profit = rr * riesgo (R múltiplo objetivo)
+    stop_buffer_ticks: 4       # colchón bajo/encima del mínimo/máximo técnico
+
+  # Day trading MNQ/NQ en RTH, RR fijo 2:1. Valores redondos y lógicos a
+  # propósito: NO optimizados contra ningún backtest (evitar curve fitting).
+  daytrading_vwap_liquidity_rr2:
+    rr: 2.0                          # TP = 2x el riesgo, SIEMPRE
+    ema_fast: 13
+    ema_mid: 25
+    ema_slow: 55
+    ema_trend: 200
+    vol_window: 20
+    rel_volume_threshold: 1.10       # sin participación no hay trade
+    pullback_lookback: 8             # ventana del pullback a valor
+    swing_k: 3                       # confirmación fractal de swings intradía
+    opening_range_minutes: 30        # rango inicial: primeros 30 min de la sesión
+    skip_open_minutes: 5             # nunca operar la apertura inmediata
+    rejection_close_pct: 0.60        # el cierre debe quedar en el 40% superior/inferior de la barra
+    max_vwap_distance_points: 60.0   # no perseguir precio extendido lejos del valor
+    min_stop_points: 8.0             # stop más chico que esto = ruido
+    max_stop_points: 60.0            # stop más grande que esto = setup inválido
+    slope_lookback: 10               # barras para medir pendiente de EMA55
+    min_slope_points: 2.0            # pendiente mínima (EMAs planas = no operar)
+    stop_buffer_ticks: 4             # colchón bajo/encima del nivel técnico
+
+  # ---- Variantes EXPERIMENTALES de la estrategia anterior ----
+  # Mismo setup, con filtros de lado/horario derivados del análisis del
+  # backtest dic-2025->jun-2026. OJO: por venir de ese mismo dataset, su
+  # mejora in-sample es esperable; el veredicto real es fuera de muestra.
+  daytrading_vwap_liquidity_rr2_no_midday:
+    blocked_entry_windows: [["11:00", "13:00"]]   # sin señales 11:00-12:59
+
+  daytrading_vwap_liquidity_rr2_longs_only:
+    allow_short: false
+
+  daytrading_vwap_liquidity_rr2_morning_only:
+    allowed_entry_windows: [["10:00", "11:00"]]   # solo señales 10:00-10:59
+
+  daytrading_vwap_liquidity_rr2_no_midday_longs_only:
+    blocked_entry_windows: [["11:00", "13:00"]]
+    allow_short: false
+
+  # near_vwap: no_midday + entrada cerca del VWAP. Umbral redondo y
+  # conservador (30 pts), deliberadamente NO el borde óptimo del diagnóstico
+  # OOS 2025 (~40), para minimizar curve fitting. Validación real pendiente
+  # en datos no usados (2024 o jul-2026+).
+  daytrading_vwap_liquidity_rr2_no_midday_near_vwap:
+    blocked_entry_windows: [["11:00", "13:00"]]
+    max_vwap_distance_points_near: 30.0
+
+  # atr_filter: no_midday + filtro de cinta muerta. Si el ATR-20 previo a la
+  # señal (causal, solo pasado) es menor al umbral, no se opera. Umbral 8.0:
+  # redondo y por debajo del borde del tercil malo del diagnóstico (~10),
+  # deliberadamente NO el óptimo. Validación real pendiente (2024 o jul-2026+).
+  daytrading_vwap_liquidity_rr2_no_midday_atr_filter:
+    blocked_entry_windows: [["11:00", "13:00"]]
+    min_atr20_points: 8.0
+
+# Ejecución real: deshabilitada por diseño. Ver .env.example (doble llave).
+live_trading: false

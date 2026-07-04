@@ -1,0 +1,171 @@
+
+==============================================================================
+  DATASET A_oos_2025: data/processed/MNQ_2025_01_2025_11_oos_clean.csv
+  212 trades | PnL -875.80 | expR -0.024
+==============================================================================
+
+  -- Tipo de día (eficiencia, DIAGNÓSTICO)
+    lateral          n=51   PnL  -1223.88 expR  -0.283 WR  25.5% PF 0.65   T/S/F 12/35/4
+    mixto            n=67   PnL  -1516.50 expR  -0.214 WR  31.3% PF 0.66   T/S/F 14/44/9
+    tendencial       n=94   PnL  +1864.58 expR  +0.253 WR  44.7% PF 1.39   T/S/F 38/51/5
+
+  -- Volatilidad del día (DIAGNÓSTICO)
+    baja             n=71   PnL  -2331.36 expR  -0.339 WR  26.8% PF 0.52   T/S/F 12/48/11
+    media            n=70   PnL   +555.92 expR  +0.105 WR  40.0% PF 1.14   T/S/F 25/40/5
+    alta             n=71   PnL   +899.64 expR  +0.165 WR  40.8% PF 1.24   T/S/F 27/42/2
+
+  -- A favor / contra el día (DIAGNÓSTICO)
+    contra el día    n=51   PnL  -2459.40 expR  -0.516 WR  17.6% PF 0.37   T/S/F 8/39/4
+    a favor del día  n=161  PnL  +1583.60 expR  +0.132 WR  41.6% PF 1.18   T/S/F 56/91/14
+
+  -- Expansión causal (rango acum./OR, terciles)
+    alto             n=71   PnL  -1127.30 expR  -0.122 WR  33.8% PF 0.75   T/S/F 18/44/9
+    bajo             n=71   PnL   -489.58 expR  -0.066 WR  32.4% PF 0.89   T/S/F 22/47/2
+    medio            n=70   PnL   +741.08 expR  +0.120 WR  41.4% PF 1.19   T/S/F 24/39/7
+
+  -- Rango acumulado hasta la señal (terciles)
+    medio            n=69   PnL  -1834.62 expR  -0.230 WR  29.0% PF 0.62   T/S/F 17/47/5
+    alto             n=71   PnL   -212.38 expR  +0.007 WR  36.6% PF 0.95   T/S/F 22/42/7
+    bajo             n=72   PnL  +1171.20 expR  +0.145 WR  41.7% PF 1.32   T/S/F 25/41/6
+
+  -- ATR-20 previo (terciles)
+    bajo             n=71   PnL  -1066.66 expR  -0.108 WR  35.2% PF 0.77   T/S/F 17/42/12
+    medio            n=70   PnL   -105.52 expR  -0.050 WR  34.3% PF 0.97   T/S/F 21/44/5
+    alto             n=71   PnL   +296.38 expR  +0.087 WR  38.0% PF 1.07   T/S/F 26/44/1
+
+  -- Rango inicial (terciles)
+    medio            n=67   PnL   -517.34 expR  -0.088 WR  31.3% PF 0.88   T/S/F 20/42/5
+    bajo             n=74   PnL   -195.30 expR  -0.023 WR  37.8% PF 0.95   T/S/F 21/45/8
+    alto             n=71   PnL   -163.16 expR  +0.037 WR  38.0% PF 0.96   T/S/F 23/43/5
+
+  -- Distancia a VWAP (terciles)
+    alto             n=71   PnL  -2215.24 expR  -0.272 WR  26.8% PF 0.56   T/S/F 16/48/7
+    medio            n=70   PnL   -142.34 expR  -0.012 WR  38.6% PF 0.97   T/S/F 21/43/6
+    bajo             n=71   PnL  +1481.78 expR  +0.214 WR  42.3% PF 1.41   T/S/F 27/39/5
+
+  -- Pendiente VWAP vs dirección
+    a favor          n=176  PnL  -1158.60 expR  -0.039 WR  35.8% PF 0.89   T/S/F 52/109/15
+    en contra        n=36   PnL   +282.80 expR  +0.051 WR  36.1% PF 1.15   T/S/F 12/21/3
+
+  -- Pendiente EMA200 vs dirección
+    en contra        n=40   PnL   -173.00 expR  -0.081 WR  32.5% PF 0.92   T/S/F 11/24/5
+    a favor          n=172  PnL   -702.80 expR  -0.010 WR  36.6% PF 0.93   T/S/F 53/106/13
+
+  -- Estructura previa (HH/LL) vs dirección
+    mixta            n=52   PnL   -882.50 expR  -0.191 WR  30.8% PF 0.73   T/S/F 13/35/4
+    a favor          n=138  PnL   -706.74 expR  -0.007 WR  36.2% PF 0.92   T/S/F 43/83/12
+    en contra        n=22   PnL   +713.44 expR  +0.269 WR  45.5% PF 1.71   T/S/F 8/12/2
+
+  -- Volumen relativo (terciles)
+    alto             n=71   PnL   -601.74 expR  -0.072 WR  35.2% PF 0.85   T/S/F 18/41/12
+    bajo             n=71   PnL   -474.82 expR  -0.020 WR  35.2% PF 0.9    T/S/F 23/46/2
+    medio            n=70   PnL   +200.76 expR  +0.022 WR  37.1% PF 1.05   T/S/F 23/43/4
+
+  -- Long vs Short
+    long             n=130  PnL  -1132.52 expR  -0.078 WR  35.4% PF 0.86   T/S/F 35/79/16
+    short            n=82   PnL   +256.72 expR  +0.062 WR  36.6% PF 1.05   T/S/F 29/51/2
+
+  -- CRUCE distancia a VWAP x expansión causal (expR por celda)
+                         exp bajo        exp medio         exp alto
+  dist bajo          +0.15R n=40      +0.53R n=15      +0.08R n=16 
+  dist medio         -0.17R n=21      +0.19R n=30      -0.16R n=19 
+  dist alto          -0.70R n=10      -0.21R n=25      -0.20R n=36 
+
+  -- Ranking de condiciones CAUSALES (spread de expR, n>=20)
+    1. Distancia a VWAP (terciles): spread +0.486R (mejor: bajo / peor: alto)
+    2. Estructura previa (HH/LL) vs dirección: spread +0.460R (mejor: en contra / peor: mixta)
+    3. Rango acumulado hasta la señal (terciles): spread +0.375R (mejor: bajo / peor: medio)
+    4. Expansión causal (rango acum./OR, terciles): spread +0.242R (mejor: medio / peor: alto)
+    5. ATR-20 previo (terciles): spread +0.195R (mejor: alto / peor: bajo)
+    6. Long vs Short: spread +0.140R (mejor: short / peor: long)
+
+==============================================================================
+  DATASET B_completo: data/processed/MNQ_2025_01_2026_06_1m_ninjatrader_combined_clean.csv
+  287 trades | PnL +2,197.98 | expR +0.094
+==============================================================================
+
+  -- Tipo de día (eficiencia, DIAGNÓSTICO)
+    lateral          n=69   PnL  -1172.64 expR  -0.200 WR  29.0% PF 0.74   T/S/F 17/45/7
+    mixto            n=90   PnL  -1830.96 expR  -0.192 WR  32.2% PF 0.69   T/S/F 19/58/13
+    tendencial       n=128  PnL  +5201.58 expR  +0.454 WR  51.6% PF 1.89   T/S/F 60/61/7
+
+  -- Volatilidad del día (DIAGNÓSTICO)
+    baja             n=96   PnL  -2744.36 expR  -0.291 WR  29.2% PF 0.58   T/S/F 18/64/14
+    media            n=95   PnL  +1171.62 expR  +0.129 WR  41.1% PF 1.22   T/S/F 33/53/9
+    alta             n=96   PnL  +3770.72 expR  +0.444 WR  50.0% PF 1.85   T/S/F 45/47/4
+
+  -- A favor / contra el día (DIAGNÓSTICO)
+    contra el día    n=66   PnL  -2999.84 expR  -0.465 WR  19.7% PF 0.41   T/S/F 11/50/5
+    a favor del día  n=221  PnL  +5197.82 expR  +0.261 WR  46.2% PF 1.47   T/S/F 85/114/22
+
+  -- Expansión causal (rango acum./OR, terciles)
+    alto             n=96   PnL   -797.82 expR  -0.041 WR  37.5% PF 0.86   T/S/F 25/55/16
+    medio            n=95   PnL  +1327.52 expR  +0.158 WR  42.1% PF 1.26   T/S/F 34/52/9
+    bajo             n=96   PnL  +1668.28 expR  +0.166 WR  40.6% PF 1.31   T/S/F 37/57/2
+
+  -- Rango acumulado hasta la señal (terciles)
+    medio            n=95   PnL  -1494.50 expR  -0.110 WR  32.6% PF 0.77   T/S/F 27/61/7
+    bajo             n=96   PnL  +1534.06 expR  +0.144 WR  41.7% PF 1.31   T/S/F 34/55/7
+    alto             n=96   PnL  +2158.42 expR  +0.246 WR  45.8% PF 1.45   T/S/F 35/48/13
+
+  -- ATR-20 previo (terciles)
+    bajo             n=96   PnL   -944.14 expR  -0.082 WR  35.4% PF 0.85   T/S/F 25/58/13
+    medio            n=95   PnL  +1511.50 expR  +0.172 WR  44.2% PF 1.34   T/S/F 32/49/14
+    alto             n=96   PnL  +1630.62 expR  +0.193 WR  40.6% PF 1.3    T/S/F 39/57/0
+
+  -- Rango inicial (terciles)
+    medio            n=95   PnL   -301.06 expR  +0.019 WR  36.8% PF 0.95   T/S/F 30/56/9
+    bajo             n=96   PnL   +485.56 expR  +0.033 WR  38.5% PF 1.09   T/S/F 30/57/9
+    alto             n=96   PnL  +2013.48 expR  +0.230 WR  44.8% PF 1.4    T/S/F 36/51/9
+
+  -- Distancia a VWAP (terciles)
+    medio            n=95   PnL    +73.00 expR  -0.009 WR  37.9% PF 1.01   T/S/F 28/58/9
+    alto             n=96   PnL   +163.24 expR  +0.052 WR  38.5% PF 1.03   T/S/F 31/55/10
+    bajo             n=96   PnL  +1961.74 expR  +0.239 WR  43.8% PF 1.4    T/S/F 37/51/8
+
+  -- Pendiente VWAP vs dirección
+    a favor          n=239  PnL  +1585.72 expR  +0.088 WR  40.2% PF 1.11   T/S/F 80/138/21
+    en contra        n=48   PnL   +612.26 expR  +0.123 WR  39.6% PF 1.25   T/S/F 16/26/6
+
+  -- Pendiente EMA200 vs dirección
+    a favor          n=231  PnL  +1487.00 expR  +0.088 WR  39.8% PF 1.11   T/S/F 78/135/18
+    en contra        n=56   PnL   +710.98 expR  +0.121 WR  41.1% PF 1.26   T/S/F 18/29/9
+
+  -- Estructura previa (HH/LL) vs dirección
+    mixta            n=70   PnL   -207.26 expR  -0.062 WR  35.7% PF 0.95   T/S/F 20/44/6
+    a favor          n=186  PnL  +1363.34 expR  +0.122 WR  40.9% PF 1.13   T/S/F 64/103/19
+    en contra        n=31   PnL  +1041.90 expR  +0.281 WR  45.2% PF 1.67   T/S/F 12/17/2
+
+  -- Volumen relativo (terciles)
+    bajo             n=96   PnL   +106.98 expR  +0.056 WR  37.5% PF 1.02   T/S/F 33/59/4
+    alto             n=96   PnL   +352.22 expR  +0.057 WR  40.6% PF 1.07   T/S/F 28/52/16
+    medio            n=95   PnL  +1738.78 expR  +0.170 WR  42.1% PF 1.34   T/S/F 35/53/7
+
+  -- Long vs Short
+    long             n=173  PnL   +824.46 expR  +0.062 WR  40.5% PF 1.08   T/S/F 54/98/21
+    short            n=114  PnL  +1373.52 expR  +0.143 WR  39.5% PF 1.22   T/S/F 42/66/6
+
+  -- CRUCE distancia a VWAP x expansión causal (expR por celda)
+                         exp bajo        exp medio         exp alto
+  dist bajo          +0.25R n=51      +0.47R n=21      +0.01R n=24 
+  dist medio         -0.10R n=29      +0.04R n=35      +0.01R n=31 
+  dist alto          +0.38R n=16      +0.09R n=39      -0.11R n=41 
+
+  -- Ranking de condiciones CAUSALES (spread de expR, n>=20)
+    1. Rango acumulado hasta la señal (terciles): spread +0.356R (mejor: alto / peor: medio)
+    2. Estructura previa (HH/LL) vs dirección: spread +0.343R (mejor: en contra / peor: mixta)
+    3. ATR-20 previo (terciles): spread +0.275R (mejor: alto / peor: bajo)
+    4. Distancia a VWAP (terciles): spread +0.248R (mejor: bajo / peor: medio)
+    5. Rango inicial (terciles): spread +0.211R (mejor: alto / peor: medio)
+    6. Expansión causal (rango acum./OR, terciles): spread +0.207R (mejor: bajo / peor: alto)
+
+==============================================================================
+  NOTAS
+==============================================================================
+  * Las categorías marcadas DIAGNÓSTICO usan el día completo (información
+    posterior a la entrada): describen el régimen, no son filtro operable.
+  * Las condiciones causales sí son operables como hipótesis, previa
+    validación en datos no usados (2024 o jul-2026+).
+  * El dataset A originó las hipótesis de mediodía y distancia: todo corte
+    sobre él es in-sample para esas decisiones.
+==============================================================================

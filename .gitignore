@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Secretos — NUNCA commitear credenciales
+.env
+
+# Salidas de ejecución
+logs/*.log
+reports/*/
+
+# Datos de mercado (pesados / con licencia). El sample sintético sí se versiona.
+data/*.csv
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/MNQ_1m_sample.csv
+
+# Notebooks: checkpoints
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/

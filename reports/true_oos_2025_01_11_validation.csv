@@ -1,0 +1,4 @@
+estrategia,trades,pnl_net,profit_factor,winrate_pct,expectancy_r,max_drawdown_usd,max_drawdown_pct,racha_perdedora_max,salidas_target,salidas_stop,salidas_flatten
+daytrading_vwap_liquidity_rr2,311,-1315.6,0.93,35.05,-0.051,3185.92,12.56,14,91,194,26
+daytrading_vwap_liquidity_rr2_no_midday,212,-875.8,0.931,35.85,-0.024,2225.44,8.85,13,64,130,18
+delta (candidata - original),-99,439.8,0.001,0.8,0.027,-960.48,-3.71,-1,-27,-64,-8

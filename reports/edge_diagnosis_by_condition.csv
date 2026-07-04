@@ -1,0 +1,55 @@
+condicion,bucket,trades,pnl,expr,winrate_pct,profit_factor
+Long vs Short,long,130,-1132.52,-0.078,35.4,0.86
+Long vs Short,short,82,256.72,0.062,36.6,1.05
+Hora de entrada,10h,107,378.58,0.026,36.4,1.06
+Hora de entrada,11h,2,83.26,0.465,50.0,1.82
+Hora de entrada,13h,54,-726.8,-0.091,31.5,0.8
+Hora de entrada,14h,41,-405.3,-0.036,39.0,0.84
+Hora de entrada,15h,8,-205.54,-0.298,37.5,0.48
+Mañana vs tarde,mañana,109,461.84,0.034,36.7,1.07
+Mañana vs tarde,tarde,103,-1337.64,-0.085,35.0,0.79
+Día de la semana,jueves,40,-1268.28,-0.325,27.5,0.53
+Día de la semana,lunes,40,-498.5,-0.119,35.0,0.79
+Día de la semana,martes,44,683.12,0.161,40.9,1.28
+Día de la semana,miércoles,52,20.82,0.032,36.5,1.01
+Día de la semana,viernes,36,187.04,0.11,38.9,1.08
+Mes,2025-01,13,-291.54,-0.249,30.8,0.62
+Mes,2025-02,23,-467.46,-0.262,26.1,0.69
+Mes,2025-03,9,269.04,0.465,55.6,1.64
+Mes,2025-04,6,252.36,0.473,50.0,1.93
+Mes,2025-05,23,-410.04,-0.161,30.4,0.75
+Mes,2025-06,27,-323.78,-0.164,33.3,0.81
+Mes,2025-07,31,-681.34,-0.188,29.0,0.68
+Mes,2025-08,20,234.38,0.174,40.0,1.22
+Mes,2025-09,30,-114.22,-0.025,36.7,0.94
+Mes,2025-10,20,308.76,0.249,45.0,1.3
+Mes,2025-11,10,348.04,0.349,50.0,1.83
+"Volatilidad del día (rango, terciles)",bajo,71,-2331.36,-0.339,26.8,0.52
+"Volatilidad del día (rango, terciles)",medio,70,555.92,0.105,40.0,1.14
+"Volatilidad del día (rango, terciles)",alto,71,899.64,0.165,40.8,1.24
+Tipo de día (eficiencia direccional),lateral/chop,51,-1223.88,-0.283,25.5,0.65
+Tipo de día (eficiencia direccional),mixto,67,-1516.5,-0.214,31.3,0.66
+Tipo de día (eficiencia direccional),tendencia,94,1864.58,0.253,44.7,1.39
+Trade a favor / contra la dirección del día,a favor del día,161,1583.6,0.132,41.6,1.18
+Trade a favor / contra la dirección del día,contra el día,51,-2459.4,-0.516,17.6,0.37
+Tamaño del rango inicial (terciles),bajo,74,-195.3,-0.023,37.8,0.95
+Tamaño del rango inicial (terciles),medio,67,-517.34,-0.088,31.3,0.88
+Tamaño del rango inicial (terciles),alto,71,-163.16,0.037,38.0,0.96
+Distancia a VWAP en la entrada (terciles),bajo,71,1481.78,0.214,42.3,1.41
+Distancia a VWAP en la entrada (terciles),medio,70,-142.34,-0.012,38.6,0.97
+Distancia a VWAP en la entrada (terciles),alto,71,-2215.24,-0.272,26.8,0.56
+Pendiente del VWAP vs dirección,a favor,176,-1158.6,-0.039,35.8,0.89
+Pendiente del VWAP vs dirección,en contra,36,282.8,0.051,36.1,1.15
+Pendiente de la EMA200 vs dirección,a favor,172,-702.8,-0.01,36.6,0.93
+Pendiente de la EMA200 vs dirección,en contra,40,-173.0,-0.081,32.5,0.92
+Precio vs VWAP (dirección),a favor,212,-875.8,-0.024,35.8,0.93
+Precio vs EMA200 (dirección),a favor,212,-875.8,-0.024,35.8,0.93
+Tamaño del stop (terciles),bajo,71,-187.22,-0.02,36.6,0.96
+Tamaño del stop (terciles),medio,72,-747.56,-0.064,34.7,0.8
+Tamaño del stop (terciles),alto,69,58.98,0.015,36.2,1.01
+Volumen relativo en la entrada (terciles),bajo,71,-474.82,-0.02,35.2,0.9
+Volumen relativo en la entrada (terciles),medio,70,200.76,0.022,37.1,1.05
+Volumen relativo en la entrada (terciles),alto,71,-601.74,-0.072,35.2,0.85
+Tipo de salida,session_flatten,18,476.6,0.245,66.7,2.91
+Tipo de salida,stop,130,-12516.98,-1.044,0.0,0.0
+Tipo de salida,target,64,11164.58,1.973,100.0,inf

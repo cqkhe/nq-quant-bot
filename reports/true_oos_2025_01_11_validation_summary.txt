@@ -1,0 +1,53 @@
+==========================================================================
+  VALIDACIÓN OUT-OF-SAMPLE — original vs candidata no_midday
+  Dataset: data/processed/MNQ_2025_01_2025_11_oos_clean.csv
+  Período: 2025-01-01 10:14:00 -> 2025-11-28 13:15:00 (271 sesiones RTH)
+==========================================================================
+
+  métrica                      original    no_midday      delta
+  trades                            311          212        -99
+  PnL neto                      -1315.6       -875.8      439.8
+  profit factor                    0.93        0.931      0.001
+  winrate %                       35.05        35.85        0.8
+  expectancia R                  -0.051       -0.024      0.027
+  drawdown $                    3185.92      2225.44    -960.48
+  drawdown %                      12.56         8.85      -3.71
+  racha perdedora                    14           13         -1
+  targets                            91           64        -27
+  stops                             194          130        -64
+  session_flatten                    26           18         -8
+
+--------------------------------------------------------------------------
+  CONSISTENCIA POR MES
+--------------------------------------------------------------------------
+  mes          PnL orig  PnL nomid   expR o   expR v  n o  n v
+  2025-01       -369.04    -291.54   -0.216   -0.249   28   13
+  2025-02       -394.10    -467.46   -0.215   -0.262   25   23
+  2025-03        751.56     269.04    0.698    0.465   13    9
+  2025-04        131.20     252.36    0.177    0.473   10    6
+  2025-05       -777.16    -410.04   -0.217   -0.161   33   23
+  2025-06       -417.96    -323.78   -0.140   -0.164   38   27
+  2025-07       -534.88    -681.34   -0.185   -0.188   42   31
+  2025-08         90.30     234.38    0.087    0.174   35   20
+  2025-09       -928.98    -114.22   -0.251   -0.025   42   30
+  2025-10        913.32     308.76    0.330    0.249   31   20
+  2025-11        220.14     348.04    0.169    0.349   14   10
+  -> mejora el PnL en 7 de 11 meses: 2025-01, 2025-04, 2025-05, 2025-06, 2025-08, 2025-09, 2025-11
+  -> empeora en 4: 2025-02, 2025-03, 2025-07, 2025-10
+
+--------------------------------------------------------------------------
+  DESCOMPOSICIÓN DEL DELTA DE PnL
+--------------------------------------------------------------------------
+  Mediodía evitado:   125 trades (PnL -1,298.76) -> aporta +1,298.76
+  Trades nuevos:       30 trades -> aporta -629.70
+  Trades perdidos:      4 trades -> aporta -136.10
+  Sizing en comunes:  -93.16
+
+--------------------------------------------------------------------------
+  VEREDICTO (criterio pre-registrado en docs/strategy_decision_log.md)
+--------------------------------------------------------------------------
+  [CUMPLE] expR candidata > original
+  [CUMPLE] drawdown candidata <= original
+  [OK] muestra de la candidata: 212 trades (mínimo orientativo 30)
+  => La candidata CUMPLE el criterio: candidata a promoción (registrar en el decision log).
+==========================================================================

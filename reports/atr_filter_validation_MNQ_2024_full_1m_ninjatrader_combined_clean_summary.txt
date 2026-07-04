@@ -1,0 +1,75 @@
+
+============================================================================
+  DATASET MNQ_2024_full_1m_ninjatrader_combined_clean: data/processed/MNQ_2024_full_1m_ninjatrader_combined_clean.csv
+  2024-01-02 09:30:00 -> 2024-12-31 15:59:00 (284 sesiones)
+  Rango FUERA del período de diseño: corrida válida como out-of-sample
+============================================================================
+  métrica                   no_midday   atr_filter      delta
+  trades                          332          258        -74
+  PnL neto                    -4716.3     -2948.06    1768.24
+  profit factor                 0.765        0.818      0.053
+  winrate %                     31.33        31.78       0.45
+  expectancia R                -0.149        -0.12      0.029
+  drawdown $                  5359.78       3553.2   -1806.58
+  racha perdedora                  10           12          2
+  targets                          86           71        -15
+  stops                           210          166        -44
+  session_flatten                  36           21        -15
+  long                            209          140        -69
+  short                           123          118         -5
+
+  Trades eliminados por ATR bajo: 102 (PnL que tenían: -1,672.98, expR -0.19)
+  Trades nuevos por re-secuenciación: 28 (-148.14)
+
+  Performance por hora (PnL):
+  hora     PnL base    PnL atr  n b  n c
+  10h      -2132.22   -2272.64  163  167
+  11h        -70.58     -70.58    1    1
+  13h      -1409.38     -84.28   85   41
+  14h       -877.24     363.04   63   37
+  15h       -226.88    -883.60   20   12
+
+  Performance por mes:
+  mes          PnL base    PnL atr   expR b   expR a  n b  n a
+  2024-01       -260.22    -504.56   -0.059   -0.180   34   23
+  2024-02      -1130.34      55.70   -0.302   -0.015   39   24
+  2024-03      -1026.22    -730.72   -0.367   -0.354   34   25
+  2024-04       -741.20    -331.82   -0.273   -0.165   29   24
+  2024-05        -15.54     488.34   -0.029    0.292   32   17
+  2024-06       -383.52    -408.88   -0.162   -0.220   31   26
+  2024-07        276.50     512.34    0.131    0.277   21   21
+  2024-08        -13.12    -365.02    0.126   -0.144   13   17
+  2024-09       -660.66    -756.40   -0.373   -0.436   20   20
+  2024-10       -417.32    -280.98   -0.115   -0.023   30   19
+  2024-11       -550.78    -421.24   -0.230   -0.212   26   22
+  2024-12        206.12    -204.82    0.139   -0.124   23   20
+  -> atr_filter mejora el PnL en 7 de 12 meses
+
+============================================================================
+  VEREDICTO (preguntas del experimento)
+============================================================================
+  [MNQ_2024_full_1m_ninjatrader_combined_clean]
+    ¿Mejora PnL?            sí (-4,716.30 -> -2,948.06)
+    ¿Mejora profit factor?  sí (0.765 -> 0.818)
+    ¿Mejora expectancia R?  sí (-0.149 -> -0.12)
+    ¿Reduce drawdown?       sí (5,359.78 -> 3,553.20)
+    Muestra: 332 -> 258 trades (-22%)
+    Eliminados por ATR: 102 con PnL -1,672.98 (expR -0.19) | nuevos: 28 (-148.14)
+    Consistencia mensual: mejora en 7 de 12 meses
+    [CUMPLE] expR candidata > no_midday
+    [CUMPLE] eliminados por ATR netos negativos (el mecanismo replica)
+    [OK] muestra candidata: 258 trades (mínimo 30)
+    CONCLUSIÓN: atr_filter MEJORA contra no_midday y CUMPLE el criterio pre-registrado -> candidata a promoción (registrar en el decision log)
+
+----------------------------------------------------------------------------
+  CAUSALIDAD: el ATR-20 es rolling sobre las 20 barras PREVIAS a la señal;
+  no usa ninguna información posterior a la entrada. Filtro operable.
+
+  CRITERIOS DE NO-ADOPCIÓN (pre-acordados):
+  * No adoptar si mejora solo por recortar demasiado la muestra.
+  * No adoptar si empeora mucho el PnL aunque mejore el drawdown.
+  * No adoptar si solo funciona en un período y falla en el otro.
+
+  ADVERTENCIA: la hipótesis salió de estos mismos datasets (diagnóstico
+  de régimen sobre A y B). Validación real pendiente: 2024 o jul-2026+.
+============================================================================

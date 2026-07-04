@@ -1,0 +1,7 @@
+dataset,estrategia,trades,pnl_net,profit_factor,winrate_pct,expectancy_r,max_drawdown_usd,max_drawdown_pct,racha_perdedora_max,targets,stops,session_flatten,n_long,n_short
+A_oos_2025,daytrading_vwap_liquidity_rr2_no_midday,212,-875.8,0.931,35.85,-0.024,2225.44,8.85,13,64,130,18,130,82
+A_oos_2025,daytrading_vwap_liquidity_rr2_no_midday_atr_filter,166,572.86,1.059,37.95,0.061,1323.04,5.26,9,57,101,8,94,72
+A_oos_2025,delta,-46,1448.66,0.128,2.1,0.085,-902.4,-3.59,-4,-7,-29,-10,-36,-10
+B_completo,daytrading_vwap_liquidity_rr2_no_midday,287,2197.98,1.135,40.07,0.094,2225.44,8.85,13,96,164,27,173,114
+B_completo,daytrading_vwap_liquidity_rr2_no_midday_atr_filter,233,3446.46,1.271,42.06,0.166,1323.04,5.26,9,85,131,17,132,101
+B_completo,delta,-54,1248.48,0.136,1.99,0.072,-902.4,-3.59,-4,-11,-33,-10,-41,-13

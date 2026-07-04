@@ -1,0 +1,38 @@
+==============================================================================
+  COMPARACIÓN DE VARIANTES — misma data, misma config de riesgo/ejecución
+  Dataset:  data/processed/MNQ_2025_12_2026_06_1m_ninjatrader_combined_clean.csv
+  Período:  2025-12-29 09:30:00 -> 2026-06-18 09:30:00  (113 sesiones RTH)
+==============================================================================
+
+  estrategia                                           trades        PnL     PF    WR%    expR       DD$ racha
+  ----------------------------------------------------------------------------------------------------------
+  daytrading_vwap_liquidity_rr2                            89    1452.14  1.313  41.57   0.154   1183.74    10
+  daytrading_vwap_liquidity_rr2_no_midday                  59    2270.80  1.827  50.85   0.384    589.24     4
+  daytrading_vwap_liquidity_rr2_longs_only                 54    1526.02  1.538   46.3   0.282    847.24     5
+  daytrading_vwap_liquidity_rr2_morning_only               33    1387.54  1.832  48.48   0.431    668.96     7
+  daytrading_vwap_liquidity_rr2_no_midday_longs_only       38    1875.88  2.048  55.26   0.513    431.44     3
+
+------------------------------------------------------------------------------
+  DELTAS vs ORIGINAL
+------------------------------------------------------------------------------
+  daytrading_vwap_liquidity_rr2_no_midday
+      trades -30 (-34%) | PnL +818.66 | expR +0.230 | DD -594.50 | racha -6
+  daytrading_vwap_liquidity_rr2_longs_only
+      trades -35 (-39%) | PnL +73.88 | expR +0.128 | DD -336.50 | racha -5
+  daytrading_vwap_liquidity_rr2_morning_only
+      trades -56 (-63%) | PnL -64.60 | expR +0.277 | DD -514.78 | racha -3
+  daytrading_vwap_liquidity_rr2_no_midday_longs_only
+      trades -51 (-57%) | PnL +423.74 | expR +0.359 | DD -752.30 | racha -7
+
+------------------------------------------------------------------------------
+  CÓMO LEER ESTO (robustez vs. menos trades)
+------------------------------------------------------------------------------
+  * Un filtro aporta robustez si SUBE la expectancia por trade (expR) y
+    BAJA el drawdown y la racha perdedora, no solo si sube el PnL.
+  * Un filtro que solo reduce trades manteniendo expR similar no agrega
+    edge: recorta actividad (y la muestra estadística).
+  * ADVERTENCIA IN-SAMPLE: estos filtros se derivaron del análisis de
+    ESTE MISMO dataset. Su mejora aquí es esperable por construcción.
+    Ninguna variante debe adoptarse sin validarla en datos nuevos
+    (otros meses / otro régimen de mercado).
+==============================================================================

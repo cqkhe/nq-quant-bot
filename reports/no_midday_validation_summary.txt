@@ -1,0 +1,54 @@
+==========================================================================
+  VALIDACIÓN DE ROBUSTEZ — no_midday vs original (mismos datos, misma config)
+  ΔPnL total: +818.66 USD | original 89 trades, variante 59 trades
+==========================================================================
+
+--------------------------------------------------------------------------
+  POR BLOQUE
+--------------------------------------------------------------------------
+  bloque               PnL orig  PnL nomid         Δ  expR o  expR v     DD o     DD v
+  2025-12 + 2026-01     -562.52      25.44   +587.96   -0.27  -0.064   652.34   494.82
+  2026-02               -110.44     -35.02    +75.42  -0.185  -0.127   670.72   373.24
+  2026-03                 28.68     224.84   +196.16  -0.024   1.972   280.16   255.00
+  2026-04               1193.34     943.40   -249.94   0.604   0.747   375.40   348.90
+  2026-05                721.30     898.62   +177.32   0.556   0.925   416.32   416.32
+  2026-06                181.78     213.52    +31.74   0.195   0.306   200.66   328.24
+  -> no_midday mejora el PnL en 5 de 6 bloques, empeora en 1
+  -> mejora la expectancia R en 6 de 6 bloques
+  -> baja el drawdown intra-bloque en 4 de 6 bloques
+
+--------------------------------------------------------------------------
+  POR MES Y POR SEMANA
+--------------------------------------------------------------------------
+  Meses:   mejora en 6 de 7 (empeora en 1)
+  Semanas: mejora en 10, empeora en 7, empata en 4 (de 21)
+  Test de signos semanal (excl. empates): p = 0.315 (una cola)
+
+--------------------------------------------------------------------------
+  DESCOMPOSICIÓN EXACTA DE LA MEJORA (ΔPnL)
+--------------------------------------------------------------------------
+  (a) Mediodía evitado:     33 trades del original, PnL -573.36 -> aporta +573.36
+  (b) Trades NUEVOS (slot libre):   4 trades, PnL +329.72 | winrate 75.0% | expR 0.815
+  (c) Originales no-mediodía que la variante no tomó:   1 trades, PnL +100.26 -> aporta -100.26
+  (d) Sizing en 55 trades comunes: +15.84
+  Suma (a)+(b)+(c)+(d) = +818.66 (ΔPnL = +818.66)
+
+--------------------------------------------------------------------------
+  DISTRIBUCIÓN Y CONCENTRACIÓN
+--------------------------------------------------------------------------
+                                 original    no_midday
+  expR (media)                      0.154        0.384
+  expR IC95 bootstrap        (-0.126, 0.456) (0.024, 0.75)
+  mediana R                        -1.021        0.307
+  % trades en stop (<=-0.9R)         53.9         45.8
+  % trades en target (>=1.8R)         33.7         40.7
+  top5 % del gross profit            19.5         24.0
+  PnL sin top 5                     264.2      1069.44
+
+--------------------------------------------------------------------------
+  ADVERTENCIA
+--------------------------------------------------------------------------
+  Todo este análisis usa el MISMO dataset del que salió el filtro.
+  La consistencia por bloques reduce la sospecha de curve fitting pero
+  no la elimina: el veredicto final requiere datos fuera de muestra.
+==========================================================================

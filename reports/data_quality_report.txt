@@ -1,0 +1,27 @@
+==================================================================
+  REPORTE DE CALIDAD DE DATOS — nqbot
+  Fuente:   data\processed\MNQ_2025_01_2026_06_1m_ninjatrader_combined_clean.csv
+  Generado: 2026-07-04 13:48:54
+==================================================================
+  VEREDICTO: APTO PARA BACKTEST
+------------------------------------------------------------------
+  Barras totales                     492,480
+  Rango                              2024-12-31 22:09:00 -> 2026-06-18 09:30:00
+  Intervalo inferido                 1 min
+  Ventana activa                     regular (09:30 -> 16:00)
+  Barras en ventana activa           137,160
+  Sesiones detectadas                401
+  Sesiones normales evaluadas        361
+  Sesiones ignoradas (fin de semana) 2025-01-11, 2025-02-16, 2025-02-23, 2025-03-02, 2025-03-09, 2025-03-15, 2025-03-30, 2025-04-05, 2025-04-20, 2025-04-27, 2025-05-03, 2025-05-17, 2025-05-18, 2025-06-08, 2025-06-15, 2025-06-22, 2025-07-06, 2025-07-12, 2025-07-13, 2025-07-20, 2025-07-27, 2025-08-03, 2025-08-17, 2025-08-24, 2025-09-07, 2025-09-13, 2025-09-14, 2025-09-21, 2025-09-28, 2025-10-05, 2025-10-19, 2025-10-26, 2025-11-09, 2025-11-23, 2025-12-07, 2025-12-21, 2026-01-04, 2026-01-11, 2026-02-01, 2026-04-05
+  Sesiones ignoradas (feriado)       0
+  Sesiones parciales aceptadas       0
+  Velas esperadas por sesión normal  390
+  Última sesión (parcial por export) 2026-06-18: termina 09:30, se esperan 1 velas
+  Velas faltantes (sesiones evaluadas) 3,297
+  Gaps reales detectados             1
+------------------------------------------------------------------
+  Problemas detectados: 3
+  [WARNING] fin_de_semana: 104 barras en fin de semana (34 sábado, 70 domingo antes de la reapertura Globex; 0.021%): prints espurios del proveedor; se ignoran para la expectativa de velas RTH
+  [WARNING] velas_faltantes: 3297 velas faltantes en sesiones evaluadas (peores: 2025-01-01: -389, 2025-01-09: -389, 2025-12-19: -389) (2.35% ; umbral 5.0%)
+  [WARNING] gaps_sesion: 1 gaps intra-sesión > 5 min: 2025-06-19 13:00:00 -> 2025-06-19 13:14:00 (14 min)
+==================================================================

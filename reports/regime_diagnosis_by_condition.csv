@@ -1,0 +1,71 @@
+dataset,condicion,bucket,trades,pnl,profit_factor,winrate_pct,expr,dd_aprox,targets,stops,session_flatten
+A_oos_2025,"Tipo de día (eficiencia, DIAGNÓSTICO)",lateral,51,-1223.88,0.65,25.5,-0.283,1767.76,12,35,4
+A_oos_2025,"Tipo de día (eficiencia, DIAGNÓSTICO)",mixto,67,-1516.5,0.66,31.3,-0.214,2217.96,14,44,9
+A_oos_2025,"Tipo de día (eficiencia, DIAGNÓSTICO)",tendencial,94,1864.58,1.39,44.7,0.253,1037.44,38,51,5
+A_oos_2025,Volatilidad del día (DIAGNÓSTICO),baja,71,-2331.36,0.52,26.8,-0.339,2337.96,12,48,11
+A_oos_2025,Volatilidad del día (DIAGNÓSTICO),media,70,555.92,1.14,40.0,0.105,673.66,25,40,5
+A_oos_2025,Volatilidad del día (DIAGNÓSTICO),alta,71,899.64,1.24,40.8,0.165,709.38,27,42,2
+A_oos_2025,A favor / contra el día (DIAGNÓSTICO),a favor del día,161,1583.6,1.18,41.6,0.132,1228.3,56,91,14
+A_oos_2025,A favor / contra el día (DIAGNÓSTICO),contra el día,51,-2459.4,0.37,17.6,-0.516,2571.24,8,39,4
+A_oos_2025,"Expansión causal (rango acum./OR, terciles)",bajo,71,-489.58,0.89,32.4,-0.066,951.7,22,47,2
+A_oos_2025,"Expansión causal (rango acum./OR, terciles)",medio,70,741.08,1.19,41.4,0.12,681.84,24,39,7
+A_oos_2025,"Expansión causal (rango acum./OR, terciles)",alto,71,-1127.3,0.75,33.8,-0.122,1784.82,18,44,9
+A_oos_2025,Rango acumulado hasta la señal (terciles),bajo,72,1171.2,1.32,41.7,0.145,510.38,25,41,6
+A_oos_2025,Rango acumulado hasta la señal (terciles),medio,69,-1834.62,0.62,29.0,-0.23,2114.92,17,47,5
+A_oos_2025,Rango acumulado hasta la señal (terciles),alto,71,-212.38,0.95,36.6,0.007,1121.32,22,42,7
+A_oos_2025,ATR-20 previo (terciles),bajo,71,-1066.66,0.77,35.2,-0.108,1875.84,17,42,12
+A_oos_2025,ATR-20 previo (terciles),medio,70,-105.52,0.97,34.3,-0.05,744.4,21,44,5
+A_oos_2025,ATR-20 previo (terciles),alto,71,296.38,1.07,38.0,0.087,1097.82,26,44,1
+A_oos_2025,Rango inicial (terciles),bajo,74,-195.3,0.95,37.8,-0.023,1528.82,21,45,8
+A_oos_2025,Rango inicial (terciles),medio,67,-517.34,0.88,31.3,-0.088,1210.56,20,42,5
+A_oos_2025,Rango inicial (terciles),alto,71,-163.16,0.96,38.0,0.037,835.54,23,43,5
+A_oos_2025,Distancia a VWAP (terciles),bajo,71,1481.78,1.41,42.3,0.214,758.24,27,39,5
+A_oos_2025,Distancia a VWAP (terciles),medio,70,-142.34,0.97,38.6,-0.012,991.56,21,43,6
+A_oos_2025,Distancia a VWAP (terciles),alto,71,-2215.24,0.56,26.8,-0.272,2689.18,16,48,7
+A_oos_2025,Pendiente VWAP vs dirección,a favor,176,-1158.6,0.89,35.8,-0.039,1993.58,52,109,15
+A_oos_2025,Pendiente VWAP vs dirección,en contra,36,282.8,1.15,36.1,0.051,556.54,12,21,3
+A_oos_2025,Pendiente EMA200 vs dirección,a favor,172,-702.8,0.93,36.6,-0.01,2092.28,53,106,13
+A_oos_2025,Pendiente EMA200 vs dirección,en contra,40,-173.0,0.92,32.5,-0.081,725.34,11,24,5
+A_oos_2025,Estructura previa (HH/LL) vs dirección,a favor,138,-706.74,0.92,36.2,-0.007,2061.94,43,83,12
+A_oos_2025,Estructura previa (HH/LL) vs dirección,en contra,22,713.44,1.71,45.5,0.269,236.06,8,12,2
+A_oos_2025,Estructura previa (HH/LL) vs dirección,mixta,52,-882.5,0.73,30.8,-0.191,1934.52,13,35,4
+A_oos_2025,Volumen relativo (terciles),bajo,71,-474.82,0.9,35.2,-0.02,1333.56,23,46,2
+A_oos_2025,Volumen relativo (terciles),medio,70,200.76,1.05,37.1,0.022,787.94,23,43,4
+A_oos_2025,Volumen relativo (terciles),alto,71,-601.74,0.85,35.2,-0.072,1091.98,18,41,12
+A_oos_2025,Long vs Short,long,130,-1132.52,0.86,35.4,-0.078,1695.2,35,79,16
+A_oos_2025,Long vs Short,short,82,256.72,1.05,36.6,0.062,941.16,29,51,2
+B_completo,"Tipo de día (eficiencia, DIAGNÓSTICO)",lateral,69,-1172.64,0.74,29.0,-0.2,2040.72,17,45,7
+B_completo,"Tipo de día (eficiencia, DIAGNÓSTICO)",mixto,90,-1830.96,0.69,32.2,-0.192,2217.96,19,58,13
+B_completo,"Tipo de día (eficiencia, DIAGNÓSTICO)",tendencial,128,5201.58,1.89,51.6,0.454,1037.44,60,61,7
+B_completo,Volatilidad del día (DIAGNÓSTICO),baja,96,-2744.36,0.58,29.2,-0.291,2972.22,18,64,14
+B_completo,Volatilidad del día (DIAGNÓSTICO),media,95,1171.62,1.22,41.1,0.129,502.28,33,53,9
+B_completo,Volatilidad del día (DIAGNÓSTICO),alta,96,3770.72,1.85,50.0,0.444,506.48,45,47,4
+B_completo,A favor / contra el día (DIAGNÓSTICO),a favor del día,221,5197.82,1.47,46.2,0.261,1228.3,85,114,22
+B_completo,A favor / contra el día (DIAGNÓSTICO),contra el día,66,-2999.84,0.41,19.7,-0.465,3126.2,11,50,5
+B_completo,"Expansión causal (rango acum./OR, terciles)",bajo,96,1668.28,1.31,40.6,0.166,951.7,37,57,2
+B_completo,"Expansión causal (rango acum./OR, terciles)",medio,95,1327.52,1.26,42.1,0.158,1037.14,34,52,9
+B_completo,"Expansión causal (rango acum./OR, terciles)",alto,96,-797.82,0.86,37.5,-0.041,1779.44,25,55,16
+B_completo,Rango acumulado hasta la señal (terciles),bajo,96,1534.06,1.31,41.7,0.144,747.62,34,55,7
+B_completo,Rango acumulado hasta la señal (terciles),medio,95,-1494.5,0.77,32.6,-0.11,2574.0,27,61,7
+B_completo,Rango acumulado hasta la señal (terciles),alto,96,2158.42,1.45,45.8,0.246,662.24,35,48,13
+B_completo,ATR-20 previo (terciles),bajo,96,-944.14,0.85,35.4,-0.082,2253.92,25,58,13
+B_completo,ATR-20 previo (terciles),medio,95,1511.5,1.34,44.2,0.172,853.86,32,49,14
+B_completo,ATR-20 previo (terciles),alto,96,1630.62,1.3,40.6,0.193,1103.56,39,57,0
+B_completo,Rango inicial (terciles),bajo,96,485.56,1.09,38.5,0.033,1304.56,30,57,9
+B_completo,Rango inicial (terciles),medio,95,-301.06,0.95,36.8,0.019,1647.18,30,56,9
+B_completo,Rango inicial (terciles),alto,96,2013.48,1.4,44.8,0.23,777.14,36,51,9
+B_completo,Distancia a VWAP (terciles),bajo,96,1961.74,1.4,43.8,0.239,970.14,37,51,8
+B_completo,Distancia a VWAP (terciles),medio,95,73.0,1.01,37.9,-0.009,860.66,28,58,9
+B_completo,Distancia a VWAP (terciles),alto,96,163.24,1.03,38.5,0.052,2210.38,31,55,10
+B_completo,Pendiente VWAP vs dirección,a favor,239,1585.72,1.11,40.2,0.088,1993.58,80,138,21
+B_completo,Pendiente VWAP vs dirección,en contra,48,612.26,1.25,39.6,0.123,556.54,16,26,6
+B_completo,Pendiente EMA200 vs dirección,a favor,231,1487.0,1.11,39.8,0.088,2092.28,78,135,18
+B_completo,Pendiente EMA200 vs dirección,en contra,56,710.98,1.26,41.1,0.121,725.34,18,29,9
+B_completo,Estructura previa (HH/LL) vs dirección,a favor,186,1363.34,1.13,40.9,0.122,2061.94,64,103,19
+B_completo,Estructura previa (HH/LL) vs dirección,en contra,31,1041.9,1.67,45.2,0.281,238.06,12,17,2
+B_completo,Estructura previa (HH/LL) vs dirección,mixta,70,-207.26,0.95,35.7,-0.062,1934.52,20,44,6
+B_completo,Volumen relativo (terciles),bajo,96,106.98,1.02,37.5,0.056,1023.3,33,59,4
+B_completo,Volumen relativo (terciles),medio,95,1738.78,1.34,42.1,0.17,727.62,35,53,7
+B_completo,Volumen relativo (terciles),alto,96,352.22,1.07,40.6,0.057,1152.3,28,52,16
+B_completo,Long vs Short,long,173,824.46,1.08,40.5,0.062,1695.2,54,98,21
+B_completo,Long vs Short,short,114,1373.52,1.22,39.5,0.143,941.16,42,66,6

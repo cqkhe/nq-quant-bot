@@ -1,0 +1,6 @@
+estrategia,trades,pnl_net,profit_factor,winrate_pct,expectancy_r,max_drawdown_usd,max_drawdown_pct,racha_perdedora_max,n_long,n_short,salidas_stop,salidas_target,salidas_flatten,trades_09h,trades_10h,trades_11h,trades_12h,trades_13h,trades_14h,trades_15h
+daytrading_vwap_liquidity_rr2,89,1452.14,1.313,41.57,0.154,1183.74,4.73,10,53,36,48,30,11,0,33,19,14,8,8,7
+daytrading_vwap_liquidity_rr2_no_midday,59,2270.8,1.827,50.85,0.384,589.24,2.33,4,38,21,27,24,8,0,33,0,0,10,9,7
+daytrading_vwap_liquidity_rr2_longs_only,54,1526.02,1.538,46.3,0.282,847.24,3.38,5,54,0,28,21,5,0,25,11,6,4,4,4
+daytrading_vwap_liquidity_rr2_morning_only,33,1387.54,1.832,48.48,0.431,668.96,2.68,7,25,8,17,16,0,0,33,0,0,0,0,0
+daytrading_vwap_liquidity_rr2_no_midday_longs_only,38,1875.88,2.048,55.26,0.513,431.44,1.72,3,38,0,17,17,4,0,25,0,0,6,3,4

@@ -1,0 +1,112 @@
+
+============================================================================
+  DATASET A_oos_2025: data/processed/MNQ_2025_01_2025_11_oos_clean.csv
+  2025-01-01 10:14:00 -> 2025-11-28 13:15:00 (271 sesiones)
+============================================================================
+  métrica                   no_midday    near_vwap      delta
+  trades                          212          102       -110
+  PnL neto                     -875.8        177.5     1053.3
+  profit factor                 0.931        1.029      0.098
+  winrate %                     35.85        37.25        1.4
+  expectancia R                -0.024        0.031      0.055
+  drawdown $                  2225.44      1277.14     -948.3
+  racha perdedora                  13            7         -6
+  targets                          64           33        -31
+  stops                           130           62        -68
+  session_flatten                  18            7        -11
+  long                            130           61        -69
+  short                            82           41        -41
+
+  Trades de no_midday eliminados por la regla near_vwap: 116 (PnL que tenían: -1,792.22, expR -0.115)
+  Trades nuevos por re-secuenciación del slot: 6 (PnL -589.86)
+
+  Performance por mes (PnL / expR / n):
+  mes          PnL base   PnL near   expR b   expR n  n b  n n
+  2025-01       -291.54     -53.06   -0.249   -0.171   13    7
+  2025-02       -467.46     397.46   -0.262    0.323   23    7
+  2025-03        269.04      -4.06    0.465    0.168    9    5
+  2025-04        252.36     176.42    0.473    1.982    6    1
+  2025-05       -410.04    -652.44   -0.161   -0.535   23   12
+  2025-06       -323.78    -182.34   -0.164   -0.152   27   15
+  2025-07       -681.34      48.28   -0.188    0.104   31   14
+  2025-08        234.38    -176.44    0.174   -0.046   20    9
+  2025-09       -114.22     333.60   -0.025    0.230   30   16
+  2025-10        308.76     540.04    0.249    0.638   20    9
+  2025-11        348.04    -249.96    0.349   -0.351   10    7
+  -> near_vwap mejora el PnL en 6 de 11 meses
+
+============================================================================
+  DATASET B_completo: data/processed/MNQ_2025_01_2026_06_1m_ninjatrader_combined_clean.csv
+  2025-01-01 10:14:00 -> 2026-06-18 09:30:00 (401 sesiones)
+============================================================================
+  métrica                   no_midday    near_vwap      delta
+  trades                          287          131       -156
+  PnL neto                    2197.98       1439.3    -758.68
+  profit factor                 1.135        1.191      0.056
+  winrate %                     40.07        41.22       1.15
+  expectancia R                 0.094        0.151      0.057
+  drawdown $                  2225.44      1277.14     -948.3
+  racha perdedora                  13            7         -6
+  targets                          96           47        -49
+  stops                           164           74        -90
+  session_flatten                  27           10        -17
+  long                            173           74        -99
+  short                           114           57        -57
+
+  Trades de no_midday eliminados por la regla near_vwap: 164 (PnL que tenían: +58.28, expR 0.018)
+  Trades nuevos por re-secuenciación del slot: 8 (PnL -551.34)
+
+  Performance por mes (PnL / expR / n):
+  mes          PnL base   PnL near   expR b   expR n  n b  n n
+  2025-01       -291.54     -53.06   -0.249   -0.171   13    7
+  2025-02       -467.46     397.46   -0.262    0.323   23    7
+  2025-03        269.04      -4.06    0.465    0.168    9    5
+  2025-04        252.36     176.42    0.473    1.982    6    1
+  2025-05       -410.04    -652.44   -0.161   -0.535   23   12
+  2025-06       -323.78    -182.34   -0.164   -0.152   27   15
+  2025-07       -681.34      48.28   -0.188    0.104   31   14
+  2025-08        234.38    -176.44    0.174   -0.046   20    9
+  2025-09       -114.22     333.60   -0.025    0.230   30   16
+  2025-10        308.76     540.04    0.249    0.638   20    9
+  2025-11        348.04    -249.96    0.349   -0.351   10    7
+  2025-12        918.92     364.82    0.486    0.468   21   12
+  2026-01        -90.50      49.26   -0.154    0.303   13    3
+  2026-02        -35.02     -84.74   -0.127   -0.366    8    2
+  2026-03        224.84       0.00    1.972    0.000    1    0
+  2026-04        943.40     210.10    0.747    0.779   17    5
+  2026-05        898.62     824.94    0.925    1.311    9    6
+  2026-06        213.52    -102.58    0.306   -1.021    6    1
+  -> near_vwap mejora el PnL en 7 de 18 meses
+
+============================================================================
+  VEREDICTO (preguntas del experimento)
+============================================================================
+  [A_oos_2025]
+    ¿Mejora PnL?            sí (-875.80 -> +177.50)
+    ¿Mejora profit factor?  sí (0.931 -> 1.029)
+    ¿Mejora expectancia R?  sí (-0.024 -> 0.031)
+    ¿Reduce drawdown?       sí (2,225.44 -> 1,277.14)
+    Muestra: 212 -> 102 trades (-52%)
+    Trades eliminados: 116 con PnL -1,792.22 (expR -0.115) | nuevos: 6 (-589.86)
+    Consistencia mensual: mejora en 6 de 11 meses
+
+  [B_completo]
+    ¿Mejora PnL?            no (+2,197.98 -> +1,439.30)
+    ¿Mejora profit factor?  sí (1.135 -> 1.191)
+    ¿Mejora expectancia R?  sí (0.094 -> 0.151)
+    ¿Reduce drawdown?       sí (2,225.44 -> 1,277.14)
+    Muestra: 287 -> 131 trades (-54%)
+    Trades eliminados: 164 con PnL +58.28 (expR 0.018) | nuevos: 8 (-551.34)
+    Consistencia mensual: mejora en 7 de 18 meses
+
+----------------------------------------------------------------------------
+  LECTURA (estructural vs recorte de trades):
+  * Estructural si: expR y PF suben, DD baja, los trades eliminados eran
+    claramente negativos, y la mejora aparece en AMBOS datasets y en la
+    mayoría de los meses.
+  * Solo recorte si: el PnL cae junto con la muestra o el expR no mejora.
+
+  ADVERTENCIA: ninguno de estos datasets es out-of-sample limpio para
+  near_vwap (la hipótesis salió del dataset A; el B contiene el período
+  de diseño de no_midday). Validación real pendiente: 2024 o jul-2026+.
+============================================================================

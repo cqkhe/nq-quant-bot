@@ -1,0 +1,129 @@
+
+============================================================================
+  DATASET A_oos_2025: data/processed/MNQ_2025_01_2025_11_oos_clean.csv
+  2025-01-01 10:14:00 -> 2025-11-28 13:15:00 (271 sesiones)
+============================================================================
+  métrica                   no_midday   atr_filter      delta
+  trades                          212          166        -46
+  PnL neto                     -875.8       572.86    1448.66
+  profit factor                 0.931        1.059      0.128
+  winrate %                     35.85        37.95        2.1
+  expectancia R                -0.024        0.061      0.085
+  drawdown $                  2225.44      1323.04     -902.4
+  racha perdedora                  13            9         -4
+  targets                          64           57         -7
+  stops                           130          101        -29
+  session_flatten                  18            8        -10
+  long                            130           94        -36
+  short                            82           72        -10
+
+  Trades eliminados por ATR bajo: 50 (PnL que tenían: -1,065.04, expR -0.173)
+  Trades nuevos por re-secuenciación: 4 (+596.52)
+
+  Performance por hora (PnL):
+  hora     PnL base    PnL atr  n b  n c
+  10h        378.58    -159.94  107  105
+  11h         83.26      83.26    2    2
+  13h       -726.80     844.32   54   29
+  14h       -405.30     -71.30   41   25
+  15h       -205.54    -123.48    8    5
+
+  Performance por mes:
+  mes          PnL base    PnL atr   expR b   expR a  n b  n a
+  2025-01       -291.54    -296.96   -0.249   -0.277   13   12
+  2025-02       -467.46    -428.76   -0.262   -0.325   23   17
+  2025-03        269.04     376.20    0.465    0.653    9    8
+  2025-04        252.36     252.36    0.473    0.473    6    6
+  2025-05       -410.04    -287.14   -0.161   -0.118   23   22
+  2025-06       -323.78    -190.98   -0.164   -0.098   27   22
+  2025-07       -681.34     -58.72   -0.188   -0.012   31   19
+  2025-08        234.38     125.56    0.174    0.192   20   13
+  2025-09       -114.22     148.02   -0.025    0.059   30   22
+  2025-10        308.76     670.98    0.249    0.572   20   15
+  2025-11        348.04     262.30    0.349    0.349   10   10
+  -> atr_filter mejora el PnL en 7 de 11 meses
+
+============================================================================
+  DATASET B_completo: data/processed/MNQ_2025_01_2026_06_1m_ninjatrader_combined_clean.csv
+  2025-01-01 10:14:00 -> 2026-06-18 09:30:00 (401 sesiones)
+============================================================================
+  métrica                   no_midday   atr_filter      delta
+  trades                          287          233        -54
+  PnL neto                    2197.98      3446.46    1248.48
+  profit factor                 1.135        1.271      0.136
+  winrate %                     40.07        42.06       1.99
+  expectancia R                 0.094        0.166      0.072
+  drawdown $                  2225.44      1323.04     -902.4
+  racha perdedora                  13            9         -4
+  targets                          96           85        -11
+  stops                           164          131        -33
+  session_flatten                  27           17        -10
+  long                            173          132        -41
+  short                           114          101        -13
+
+  Trades eliminados por ATR bajo: 59 (PnL que tenían: -594.60, expR -0.054)
+  Trades nuevos por re-secuenciación: 5 (+802.94)
+
+  Performance por hora (PnL):
+  hora     PnL base    PnL atr  n b  n c
+  10h       2379.90    1905.22  148  146
+  11h         83.26      83.26    2    2
+  13h       -927.20     685.20   67   39
+  14h        672.94     473.74   54   35
+  15h        -10.92     299.04   16   11
+
+  Performance por mes:
+  mes          PnL base    PnL atr   expR b   expR a  n b  n a
+  2025-01       -291.54    -296.96   -0.249   -0.277   13   12
+  2025-02       -467.46    -428.76   -0.262   -0.325   23   17
+  2025-03        269.04     376.20    0.465    0.653    9    8
+  2025-04        252.36     252.36    0.473    0.473    6    6
+  2025-05       -410.04    -287.14   -0.161   -0.118   23   22
+  2025-06       -323.78    -190.98   -0.164   -0.098   27   22
+  2025-07       -681.34     -58.72   -0.188   -0.012   31   19
+  2025-08        234.38     125.56    0.174    0.192   20   13
+  2025-09       -114.22     148.02   -0.025    0.059   30   22
+  2025-10        308.76     670.98    0.249    0.572   20   15
+  2025-11        348.04     262.30    0.349    0.349   10   10
+  2025-12        918.92     554.24    0.486    0.330   21   19
+  2026-01        -90.50    -102.12   -0.154   -0.179   13   10
+  2026-02        -35.02    -124.06   -0.127   -0.305    8    6
+  2026-03        224.84     224.84    1.972    1.972    1    1
+  2026-04        943.40    1208.56    0.747    0.860   17   16
+  2026-05        898.62     898.62    0.925    0.925    9    9
+  2026-06        213.52     213.52    0.306    0.306    6    6
+  -> atr_filter mejora el PnL en 8 de 18 meses
+
+============================================================================
+  VEREDICTO (preguntas del experimento)
+============================================================================
+  [A_oos_2025]
+    ¿Mejora PnL?            sí (-875.80 -> +572.86)
+    ¿Mejora profit factor?  sí (0.931 -> 1.059)
+    ¿Mejora expectancia R?  sí (-0.024 -> 0.061)
+    ¿Reduce drawdown?       sí (2,225.44 -> 1,323.04)
+    Muestra: 212 -> 166 trades (-22%)
+    Eliminados por ATR: 50 con PnL -1,065.04 (expR -0.173) | nuevos: 4 (+596.52)
+    Consistencia mensual: mejora en 7 de 11 meses
+
+  [B_completo]
+    ¿Mejora PnL?            sí (+2,197.98 -> +3,446.46)
+    ¿Mejora profit factor?  sí (1.135 -> 1.271)
+    ¿Mejora expectancia R?  sí (0.094 -> 0.166)
+    ¿Reduce drawdown?       sí (2,225.44 -> 1,323.04)
+    Muestra: 287 -> 233 trades (-19%)
+    Eliminados por ATR: 59 con PnL -594.60 (expR -0.054) | nuevos: 5 (+802.94)
+    Consistencia mensual: mejora en 8 de 18 meses
+
+----------------------------------------------------------------------------
+  CAUSALIDAD: el ATR-20 es rolling sobre las 20 barras PREVIAS a la señal;
+  no usa ninguna información posterior a la entrada. Filtro operable.
+
+  CRITERIOS DE NO-ADOPCIÓN (pre-acordados):
+  * No adoptar si mejora solo por recortar demasiado la muestra.
+  * No adoptar si empeora mucho el PnL aunque mejore el drawdown.
+  * No adoptar si solo funciona en un período y falla en el otro.
+
+  ADVERTENCIA: la hipótesis salió de estos mismos datasets (diagnóstico
+  de régimen sobre A y B). Validación real pendiente: 2024 o jul-2026+.
+============================================================================
