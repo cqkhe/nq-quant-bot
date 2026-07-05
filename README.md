@@ -201,6 +201,15 @@ python main.py --mode backtest --symbol MNQ --strategy daytrading_vwap_liquidity
 Parámetros en `config/config.yaml` → `strategy.daytrading_vwap_liquidity_rr2`
 (valores redondos y lógicos, **no optimizados contra backtests**).
 
+### Arquitectura Quant Brain
+
+El proyecto evolucionó de "bot con una estrategia" a **plataforma de
+investigación cuantitativa**. La arquitectura maestra (módulos, flujo de
+investigación, reglas anti-curve-fitting, criterios para paper trading y
+roadmap) está en **`docs/quant_brain_architecture.md`**. El ciclo de la
+familia VWAP+RR2 quedó cerrado (`reports/final_vwap_rr2_research_closure.md`):
+sus estrategias son benchmark y biblioteca, no candidatas operativas.
+
 ### Estado de las estrategias y variantes
 
 El gobierno de qué estrategia es benchmark, cuál está en evaluación y con qué
