@@ -210,6 +210,11 @@ roadmap) está en **`docs/quant_brain_architecture.md`**. El ciclo de la
 familia VWAP+RR2 quedó cerrado (`reports/final_vwap_rr2_research_closure.md`):
 sus estrategias son benchmark y biblioteca, no candidatas operativas.
 
+La **memoria de investigación** vive en `research/`: toda hipótesis, su
+estado y su decisión están indexados en **`research/research_memory_index.md`**
+(qué se probó, qué replicó, qué quedó descartado y por qué — para no repetir
+experimentos inútiles). Reglas y flujo en `research/README.md`.
+
 ### Estado de las estrategias y variantes
 
 El gobierno de qué estrategia es benchmark, cuál está en evaluación y con qué
