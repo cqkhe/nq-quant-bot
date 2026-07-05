@@ -130,3 +130,95 @@ class Decision:
         lines += [f"- {r}" for r in self.reasons]
         lines += ["", "## Recomendación", "", self.recommendation, ""]
         return "\n".join(lines)
+
+
+# ======================================================================
+# Hypothesis Engine (Fase 4)
+# ======================================================================
+
+class HypothesisStatus(str, Enum):
+    PROPOSED = "PROPOSED"              # idea registrada, plan incompleto
+    DESIGNED = "DESIGNED"              # plan completo, criterios congelados
+    READY_FOR_TEST = "READY_FOR_TEST"  # variante implementada, sin correr
+    TESTED = "TESTED"                  # resultados documentados
+    PROMOTED = "PROMOTED"              # decisión aprobatoria registrada
+    OBSERVATION = "OBSERVATION"        # evidencia mixta: esperar datos nuevos
+    REJECTED = "REJECTED"              # descartada con evidencia
+    ARCHIVED = "ARCHIVED"              # fuera de alcance / superada
+
+
+class HypothesisType(str, Enum):
+    ENTRY_LOGIC = "ENTRY_LOGIC"
+    EXIT_LOGIC = "EXIT_LOGIC"
+    RISK_MANAGEMENT = "RISK_MANAGEMENT"
+    MARKET_REGIME = "MARKET_REGIME"
+    FILTER = "FILTER"
+    POSITION_SIZING = "POSITION_SIZING"
+    EXECUTION = "EXECUTION"
+    DATA_QUALITY = "DATA_QUALITY"
+
+
+class HypothesisPriority(str, Enum):
+    ALTA = "ALTA"
+    MEDIA = "MEDIA"
+    BAJA = "BAJA"
+
+
+class ExpectedImpact(str, Enum):
+    ALTO = "ALTO"
+    MEDIO = "MEDIO"
+    BAJO = "BAJO"
+
+
+class CausalClarity(str, Enum):
+    ALTA = "ALTA"
+    MEDIA = "MEDIA"
+    BAJA = "BAJA"
+
+
+class HypothesisRisk(str, Enum):
+    """Riesgo de curve fitting de la hipótesis."""
+
+    BAJO = "BAJO"
+    MEDIO = "MEDIO"
+    ALTO = "ALTO"
+
+
+@dataclass
+class HypothesisValidationPlan:
+    """Plan de validación: se congela al pasar a DESIGNED.
+
+    `oos_pending=True` significa que el OOS está DECLARADO pero los datos
+    aún no existen/no se adquirieron (p. ej. "jul-2026 en adelante"): es el
+    único caso legítimo de OOS sin archivo, porque garantiza que nadie lo
+    miró todavía.
+    """
+
+    design_dataset: str = ""
+    design_period: str = ""
+    oos_dataset: str = ""
+    oos_period: str = ""
+    oos_pending: bool = False
+    acceptance_criteria: list[str] = field(default_factory=list)
+    rejection_criteria: list[str] = field(default_factory=list)
+    min_sample_trades: int = 30
+
+
+@dataclass
+class Hypothesis:
+    """Ficha estructurada de una hipótesis de investigación."""
+
+    id: str
+    title: str
+    type: HypothesisType
+    statement: str = ""
+    causal_mechanism: str = ""
+    origin: str = ""
+    status: HypothesisStatus = HypothesisStatus.PROPOSED
+    created: str = ""                      # YYYY-MM-DD
+    expected_impact: ExpectedImpact = ExpectedImpact.MEDIO
+    causal_clarity: CausalClarity = CausalClarity.MEDIA
+    curve_fitting_risk: HypothesisRisk = HypothesisRisk.MEDIO
+    risk_notes: str = ""
+    validation: HypothesisValidationPlan = field(default_factory=HypothesisValidationPlan)
+    notes: str = ""
