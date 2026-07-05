@@ -57,9 +57,14 @@ research/
 2. Completar TODO antes de implementar o correr nada.
 3. Registrar la fila en `research_memory_index.md`.
 4. Implementar (Strategy Lab), correr, documentar resultado en la ficha.
-5. Copiar `templates/decision_template.md` → `decisions/DXXX_nombre.md` con
-   el veredicto contra los criterios pre-registrados.
-6. Actualizar estado en el índice.
+5. **Evaluar con el Decision Engine** (gates ejecutables):
+   `python scripts/evaluate_experiment.py --report <carpeta> --oos si|no --overlaps si|no`
+   — reglas y umbrales pre-registrados en `decisions/decision_engine_rules.md`;
+   la evaluación queda guardada en `experiments/`.
+6. Copiar `templates/decision_template.md` → `decisions/DXXX_nombre.md` con
+   el veredicto contra los criterios pre-registrados (la decisión humana
+   puede ser más estricta que el motor, nunca más laxa).
+7. Actualizar estado en el índice.
 
 ## Conocimiento validado hasta ahora (resumen vivo)
 
