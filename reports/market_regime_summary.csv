@@ -1,0 +1,16 @@
+dimension,etiqueta,barras,pct_barras,sesiones_dominantes,pct_sesiones
+Volatilidad,alta,42880,43.4,123,43.3
+Volatilidad,baja,33389,33.8,125,44.0
+Volatilidad,media,18900,19.1,26,9.2
+Volatilidad,no_clasificable,3721,3.8,10,3.5
+Tendencia,tendencia_alcista,41950,42.4,134,47.2
+Tendencia,tendencia_bajista,31252,31.6,90,31.7
+Tendencia,lateral,25658,25.9,60,21.1
+Tendencia,no_clasificable,30,0.0,0,0.0
+Expansión,neutral,43273,43.8,123,43.3
+Expansión,expansion,36273,36.7,114,40.1
+Expansión,compresion,11559,11.7,21,7.4
+Expansión,no_clasificable,7785,7.9,26,9.2
+Sesgo direccional,alcista,43850,44.3,126,44.4
+Sesgo direccional,bajista,37461,37.9,109,38.4
+Sesgo direccional,neutral,17579,17.8,49,17.3
