@@ -1,51 +1,54 @@
-# H002 — Salida dinámica si el trade no alcanza +0.5R en X minutos
+# H002 — Salida dinámica si el trade no alcanza +0.5R en 30 minutos
 
 | Campo | Valor |
 |---|---|
 | **ID** | H002 |
 | **Fecha de registro** | 2026-07-05 |
-| **Estado** | PROPOSED |
+| **Estado** | DESIGNED |
 | **Tipo** | EXIT_LOGIC |
 | **Prioridad (calculada)** | ALTA — impacto ALTO, claridad ALTA, riesgo CF MEDIO |
-| **Origen** | Cierre de H001 (reports/final_vwap_rr2_research_closure.md §9) + diagnóstico de régimen: mediana R de la familia = -1.02 (el trade típico muere en el stop) y los targets tardan ~35 barras. |
+| **Origen** | Cierre de H001 + diagnóstico dedicado reports/dynamic_exit_diagnosis_summary.md (2026-07-05, 287 trades de no_midday sobre 18 meses). |
 
 ## Hipótesis
 
-Los trades de continuación que no alcanzan +0.5R dentro de X minutos desde la entrada tienen expectativa claramente peor que los que sí; cerrarlos anticipadamente reduce la pérdida media sin destruir una fracción relevante de los ganadores.
+Los trades de continuación que no alcanzan +0.5R dentro de los primeros 30 minutos tienen expectativa claramente negativa; cerrarlos a mercado en ese punto reduce la pérdida media sin destruir una fracción relevante de los ganadores.
 
 ## Mecanismo causal esperado
 
-En setups de continuación, la participación institucional que valida la entrada aparece rápido o no aparece: un trade estancado bajo +0.5R indica absorción/falta de follow-through, y su destino dominante es el stop (-1R) o el flatten. Cortarlo temprano convierte pérdidas completas en pérdidas parciales. Ataca el hallazgo central del cierre de H001: el régimen del día se revela DESPUÉS de entrar, donde los filtros de entrada no llegan.
+En setups de continuación, la participación que valida la entrada aparece rápido o no aparece. Diagnóstico (287 trades, dic-24→jun-26, in-sample): los targets alcanzan +0.5R con MEDIANA DE 3 MINUTOS y el 100% lo alcanza; de los stops, solo 46% lo alcanza alguna vez. Un trade estancado bajo +0.5R a los 30 min tiene winrate final 23%, R promedio -0.56 y termina en stop el 71% de las veces. La espera posterior solo financia el camino al stop.
 
 ## Datasets
 
 | Rol | Dataset | Período |
 |---|---|---|
-| Diseño (in-sample) | data/processed/MNQ_2024_full + MNQ_2025_01_2026_06 (ya vistos: solo sirven para DISEÑO) | 2024-01 → 2026-06 |
+| Diseño (in-sample) | data/processed/MNQ_2025_01_2026_06 (+2024 para re-chequeo de diseño) — ya vistos: solo diseño | 2024-01 → 2026-06 |
 | Out-of-sample (RESERVADO) | PENDIENTE: jul-2026 en adelante (a recolectar) o histórico 2023 (a adquirir) — **PENDIENTE: datos aún no disponibles/adquiridos (garantía de OOS virgen)** | futuro |
 
 Muestra mínima para veredicto: **30 trades**.
 
-## Criterios de ACEPTACIÓN *(borrador: se congelan al pasar a DESIGNED)*
+## Criterios de ACEPTACIÓN
 
-1. expR de la variante > expR de la base (atr_filter) en el OOS
-2. los trades cerrados anticipadamente habrían terminado mayoritariamente en stop (el mecanismo replica: PnL evitado negativo, medible re-simulando sin la regla)
-3. no se pierde más del ~20% de los targets de la base
-4. >= 30 trades de la variante en el OOS
+1. REGLA CONGELADA: si el trade no alcanzó +0.5R (por excursión favorable) a los 30 minutos de la entrada, salida a mercado. Sin variantes de la regla.
+2. En el OOS: expR de la variante > expR de la base (misma lógica sin la regla).
+3. El mecanismo replica: los trades cortados por la regla deben mostrar PnL evitado negativo también en el OOS (re-simulación con y sin regla).
+4. No mata ganadores: <= 20% de los trades cortados habrían llegado a target.
+5. >= 30 trades de la variante en el OOS.
 
-## Criterios de DESCARTE *(borrador: se congelan al pasar a DESIGNED)*
+## Criterios de DESCARTE
 
-1. la mejora desaparece re-simulando en el OOS (flip del PnL evitado)
-2. mata ganadores: los targets caen mucho más que las pérdidas evitadas
-3. mejora métricas solo por reducir la muestra
+1. El PnL evitado por la regla cambia de signo en el OOS (flip = régimen).
+2. Más del 20% de los cortados habrían sido targets.
+3. La mejora de métricas viene solo de reducir la muestra.
 
 ## Riesgos de curve fitting
 
-**Nivel: MEDIO.** Dos parámetros nuevos (umbral R y X minutos): elegir valores redondos únicos (p.ej. 0.5R / 20 min) SIN grid search. El diseño saldrá de datos ya vistos por H001: la validación exige OOS virgen.
+**Nivel: MEDIO.** El umbral +0.5R estaba PRE-declarado en la hipótesis original (antes del diagnóstico). La ventana de 30 min se eligió redonda y del MEDIO de la curva reportada (10-60 min), no en la celda más extrema (+0.25R/45min era 'mejor' in-sample y se descartó por eso). Riesgo residual: el diagnóstico usa datos ya vistos por H001; nada de esto vale sin el OOS virgen.
 
 ## Notas
 
-PRERREQUISITO TÉCNICO: el motor de backtesting hoy solo soporta stop/target/flatten fijos; esta hipótesis requiere la extensión controlada de salidas dinámicas (Fase 5 del roadmap), con tests propios, ANTES de implementarla.
+RESULTADO DEL DIAGNÓSTICO (2026-07-05, in-sample): ganadores rápidos (mediana 3 min a +0.5R), estancados a 30 min = 23% winrate / -0.56R / 71% stops (n=35, 12% de los trades). Los session_flatten NO son objetivo de la regla (92.6% alcanza +0.5R; MFE mediana 1.04R). Hallazgo colateral fuerte para H003: retorno al VWAP post-entrada -> winrate 17% vs 60.5% sin retorno; expansión del rango durante el trade: targets 38.5 pts vs stops/flatten 0 pts.
+
+INFORMACIÓN FALTANTE PARA IMPLEMENTAR: (1) el R mark-to-market exacto en el minuto 30 (el diagnóstico midió excursiones, no el precio en T; la implementación lo captura naturalmente); (2) PRERREQUISITO TÉCNICO: extensión controlada del motor de backtesting para salidas dinámicas, con tests propios — H002 NO pasa a READY_FOR_TEST hasta que exista.
 
 ## Resultado final
 
