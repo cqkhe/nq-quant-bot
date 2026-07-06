@@ -48,7 +48,9 @@ Muestra mínima para veredicto: **30 trades**.
 
 RESULTADO DEL DIAGNÓSTICO (2026-07-05, in-sample): ganadores rápidos (mediana 3 min a +0.5R), estancados a 30 min = 23% winrate / -0.56R / 71% stops (n=35, 12% de los trades). Los session_flatten NO son objetivo de la regla (92.6% alcanza +0.5R; MFE mediana 1.04R). Hallazgo colateral fuerte para H003: retorno al VWAP post-entrada -> winrate 17% vs 60.5% sin retorno; expansión del rango durante el trade: targets 38.5 pts vs stops/flatten 0 pts.
 
-INFORMACIÓN FALTANTE PARA IMPLEMENTAR: (1) el R mark-to-market exacto en el minuto 30 (el diagnóstico midió excursiones, no el precio en T; la implementación lo captura naturalmente); (2) PRERREQUISITO TÉCNICO: extensión controlada del motor de backtesting para salidas dinámicas, con tests propios — H002 NO pasa a READY_FOR_TEST hasta que exista.
+PRERREQUISITO TÉCNICO — ACTUALIZACIÓN 2026-07-05: la extensión del motor para salidas dinámicas está **implementada y testeada** (hook `Strategy.should_exit_early` + `TradeState` causal + `exit_reason="early_exit"`; 7 tests dedicados, incluida la equivalencia exacta sin hook y la ausencia de lookahead — ver `docs/dynamic_exit_engine_extension.md`). El `TradeState` entrega `current_r` y `mfe_r` al cierre de cada barra, lo que resuelve el faltante del mark-to-market en T identificado por el diagnóstico.
+
+ESTADO: la hipótesis **sigue en DESIGNED**. La variante (`..._dynamic_exit` o similar) **NO fue creada** ni backtesteada. Para pasar a READY_FOR_TEST falta únicamente implementar la variante con la regla congelada (decisión aparte); para TESTED, correr el protocolo contra el OOS virgen declarado (jul-2026+ o 2023).
 
 ## Resultado final
 

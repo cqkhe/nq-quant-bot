@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
+from enum import Enum
 from typing import Any
 
 import pandas as pd
@@ -53,6 +54,51 @@ class Position:
 
     def unrealized(self, mark_price: float, point_value: float) -> float:
         return (mark_price - self.entry_price) * self.direction * point_value * self.contracts
+
+
+class EarlyExitReason(str, Enum):
+    """Categoría del motivo de una salida dinámica (detalle libre en el signal)."""
+
+    NO_PROGRESS = "no_progress"          # el trade no avanzó lo esperado a tiempo
+    FAILED_EXPANSION = "failed_expansion"  # el día no desarrolló rango a favor
+    STRATEGY_RULE = "strategy_rule"      # otra regla propia de la estrategia
+
+
+@dataclass(frozen=True)
+class EarlyExitSignal:
+    """Orden de salida anticipada emitida por el hook `should_exit_early`.
+
+    El Trade resultante registra exit_reason="early_exit"; la categoría y el
+    detalle quedan en el log para auditoría.
+    """
+
+    reason: EarlyExitReason | str
+    detail: str = ""
+
+
+@dataclass(frozen=True)
+class TradeState:
+    """Snapshot CAUSAL de la posición abierta, al cierre de la barra actual.
+
+    Todo lo que contiene se conoce al cierre de la barra en curso: excursiones
+    máximas (MFE/MAE) acumuladas SOLO con las barras transcurridas, y el mark
+    al cierre actual. Es la única información de trade que recibe el hook de
+    salida dinámica — por construcción no puede mirar el futuro.
+    """
+
+    direction: int
+    contracts: int
+    entry_time: datetime
+    entry_price: float
+    stop_price: float
+    target_price: float
+    initial_risk_dollars: float
+    bars_held: int
+    minutes_held: float
+    current_close: float
+    current_r: float   # (close_actual - entry) * dir / riesgo_en_puntos
+    mfe_r: float       # máxima excursión favorable hasta ahora, en R
+    mae_r: float       # máxima excursión adversa hasta ahora, en R
 
 
 @dataclass(frozen=True)

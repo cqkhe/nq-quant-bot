@@ -18,7 +18,7 @@ from typing import Any
 
 import pandas as pd
 
-from ..backtesting.models import Signal
+from ..backtesting.models import EarlyExitSignal, Signal, TradeState
 from ..config.settings import ContractSpec
 
 
@@ -40,3 +40,21 @@ class Strategy(ABC):
     @abstractmethod
     def signal_for_bar(self, ts: datetime, row: pd.Series) -> Signal | None:
         """Evalúa la barra t (ya preparada) y devuelve una señal o None."""
+
+    def should_exit_early(
+        self, ts: datetime, row: pd.Series, trade_state: TradeState
+    ) -> EarlyExitSignal | None:
+        """Hook OPCIONAL de salida dinámica dentro del trade.
+
+        El motor lo llama al cierre de cada barra con posición abierta,
+        DESPUÉS de evaluar stop/target/session_flatten (nunca los pisa).
+        Recibe la barra preparada (indicadores incluidos) y un TradeState
+        causal (MFE/MAE/mark solo con barras transcurridas). Si devuelve un
+        EarlyExitSignal, la posición se cierra a mercado al cierre de esa
+        barra (misma convención y costos que session_flatten) y el Trade
+        registra exit_reason="early_exit".
+
+        El default devuelve None: una estrategia que no lo implemente se
+        comporta EXACTAMENTE igual que antes de esta extensión.
+        """
+        return None

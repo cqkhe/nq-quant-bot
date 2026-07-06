@@ -30,7 +30,7 @@ from ..risk.manager import RiskManager
 from ..risk.position_sizing import contracts_for_risk
 from ..strategies.base import Strategy
 from ..utils.sessions import time_in_range, trade_session_key
-from .models import BacktestResult, PendingEntry, Position, Trade
+from .models import BacktestResult, PendingEntry, Position, Trade, TradeState
 
 
 class BacktestEngine:
@@ -87,6 +87,11 @@ class BacktestEngine:
         pending: PendingEntry | None = None
         position: Position | None = None
         bars_held = 0
+        # excursiones de la posición abierta (en puntos), acumuladas de forma
+        # causal barra a barra: insumo del TradeState del hook de salida dinámica
+        pos_risk_pts = 0.0
+        pos_mfe_pts = 0.0
+        pos_mae_pts = 0.0
         current_session = None
 
         for i in range(n):
@@ -138,6 +143,9 @@ class BacktestEngine:
                         reason=sig.reason,
                     )
                     bars_held = 0
+                    pos_risk_pts = dist
+                    pos_mfe_pts = 0.0
+                    pos_mae_pts = 0.0
                     entered_this_bar = True
                     risk.on_position_opened()
                     self.log.info(
@@ -149,6 +157,11 @@ class BacktestEngine:
             # 2) Gestión de la posición abierta: stop / target
             if position is not None:
                 bars_held += 1
+                d = position.direction
+                fav = (highs[i] - position.entry_price) if d > 0 else (position.entry_price - lows[i])
+                adv = (position.entry_price - lows[i]) if d > 0 else (highs[i] - position.entry_price)
+                pos_mfe_pts = max(pos_mfe_pts, fav)
+                pos_mae_pts = max(pos_mae_pts, adv)
                 exit_ = self.sim.check_exit(
                     position, opens[i], highs[i], lows[i], closes[i], entered_this_bar
                 )
@@ -165,6 +178,37 @@ class BacktestEngine:
                 price = self.sim.market_exit_price(closes[i], position.direction)
                 position, trade = None, self.sim.build_trade(position, ts, price, "session_flatten", bars_held)
                 self._settle(trade, account, risk, trades)
+
+            # 3b) Salida dinámica OPCIONAL de la estrategia (hook causal).
+            # Se evalúa DESPUÉS de stop/target/flatten: jamás los pisa. Usa
+            # solo la barra actual cerrada y el TradeState acumulado hasta acá;
+            # el fill es a mercado al cierre (misma convención que el flatten).
+            if position is not None:
+                state = TradeState(
+                    direction=position.direction,
+                    contracts=position.contracts,
+                    entry_time=position.entry_time,
+                    entry_price=position.entry_price,
+                    stop_price=position.stop_price,
+                    target_price=position.target_price,
+                    initial_risk_dollars=position.initial_risk_dollars,
+                    bars_held=bars_held,
+                    minutes_held=(ts - position.entry_time).total_seconds() / 60.0,
+                    current_close=closes[i],
+                    current_r=(closes[i] - position.entry_price) * position.direction / pos_risk_pts,
+                    mfe_r=pos_mfe_pts / pos_risk_pts,
+                    mae_r=pos_mae_pts / pos_risk_pts,
+                )
+                early = self.strategy.should_exit_early(ts, data.iloc[i], state)
+                if early is not None:
+                    price = self.sim.market_exit_price(closes[i], position.direction)
+                    position, trade = None, self.sim.build_trade(position, ts, price, "early_exit", bars_held)
+                    self._settle(trade, account, risk, trades)
+                    self.log.info(
+                        "%s EARLY EXIT [%s] %s | estado: %.1f min, MFE %.2fR, mark %.2fR",
+                        ts, getattr(early.reason, "value", early.reason), early.detail,
+                        state.minutes_held, state.mfe_r, state.current_r,
+                    )
 
             # 4) Búsqueda de señal nueva (solo flat y dentro de la ventana horaria)
             if (
