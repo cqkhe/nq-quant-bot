@@ -121,6 +121,21 @@ Para paper trading todavia hace falta:
 
 Strategy Lab nunca selecciona automaticamente una estrategia para fondeo.
 
+## Volumen OHLCV y volumen gaussiano
+
+El Strategy Lab puede registrar familias basadas en volumen, pero el dataset
+actual solo tiene OHLCV de 1 minuto. Eso permite investigar volumen de vela,
+volumen relativo, spikes, dry-up, compresion/expansion y z-score de volumen.
+
+No permite inferir order flow real: no hay bid/ask, delta, footprint, DOM ni
+volumen por precio. Por eso una familia `gaussian_volume_*` significa volumen
+normalizado por media movil y desviacion estandar, no flujo de ordenes real.
+
+Toda estadistica rolling de volumen debe evitar lookahead. Las utilidades de
+Strategy Lab calculan media, desviacion estandar, volumen relativo y z-score
+usando barras pasadas (`shift(1)`) para que una barra no use informacion futura
+al clasificar su contexto.
+
 ## Uso
 
 Ejemplo en Windows PowerShell:
@@ -141,14 +156,11 @@ Salidas:
 ```text
 reports/strategy_search_results.csv
 reports/strategy_search_summary.md
+reports/strategy_search_family_summary.csv
 ```
 
-Familias disponibles inicialmente:
-
-- `rr2_atr_filter`
-- `base_vwap_ema`
-
-Tambien se acepta el alias:
+Las familias registradas se documentan en `docs/strategy_families.md`. Tambien
+se acepta el alias:
 
 - `daytrading_vwap_liquidity_rr2_no_midday_atr_filter`
 
@@ -160,3 +172,47 @@ ranking y deja claro si hay `PAPER_CANDIDATE`.
 
 Si no hay candidatas, eso es un resultado valido. Una buena fabrica de
 investigacion descarta mucho mas de lo que promueve.
+
+## Correr todas las familias
+
+Para ampliar el universo de investigacion sin elegir una familia a mano:
+
+```powershell
+python scripts/run_strategy_search.py `
+  --symbol MNQ `
+  --data data/processed/MNQ_2024_01_2026_06_full_1m_ninjatrader_combined_clean.csv `
+  --family all `
+  --initial-capital 25000 `
+  --max-variants-per-family 4 `
+  --iterations 1000 `
+  --seed 42
+```
+
+`--family all` recorre todas las familias registradas. Las familias con
+estrategia real se evaluan normalmente. Las familias en scaffolding quedan en
+el registry y aparecen en los resumenes como no ejecutables, pero no entran al
+ciclo de backtest de `all`. Esto evita inventar logica sin tests.
+
+`--max-variants` sigue funcionando para una sola familia. Para `all`, usar
+`--max-variants-per-family` mantiene la busqueda acotada.
+
+## Ranking global
+
+Cuando se corre `--family all`, el resumen incluye:
+
+- familias evaluadas;
+- familias registradas;
+- familias ejecutables;
+- familias no ejecutables/scaffolding;
+- variantes por familia;
+- `PAPER_CANDIDATE` total y por familia;
+- top 10 global;
+- top 3 por familia;
+- familias completamente rechazadas;
+- motivos frecuentes de rechazo.
+
+El ranking global sigue sin ordenar por PnL. Una familia puede aparecer con PnL
+positivo y quedar descartada si su drawdown es alto, si depende de pocos
+ganadores, si falla ante costos/slippage, o si Monte Carlo/Bootstrap muestran
+fragilidad. La regla es deliberadamente conservadora: si no hay robustez, no hay
+paper.

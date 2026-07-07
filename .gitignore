@@ -7,6 +7,7 @@ build/
 dist/
 .pytest_cache/
 .pytest_tmp*/
+.codex_test_deps*/
 .mypy_cache/
 .venv/
 venv/

@@ -26,8 +26,10 @@ from nqbot.utils.sessions import filter_to_trade_session
 from .filters import apply_filters
 from .models import (
     ExperimentResult,
+    StrategyFamily,
     StrategyRanking,
     StrategySearchConfig,
+    StrategySearchSuite,
     StrategyVariant,
     result_to_row,
 )
@@ -50,12 +52,14 @@ def run_strategy_search(
         raise ValueError("initial_capital debe ser > 0")
 
     variants = generate_variants(cfg.family, max_variants=cfg.max_variants, seed=cfg.seed)
-    context = None if evaluator else _load_context(cfg)
+    context = None if evaluator or not cfg.family.implemented else _load_context(cfg)
     results: list[ExperimentResult] = []
 
     for variant in variants:
         try:
-            if evaluator is not None:
+            if not cfg.family.implemented:
+                result = _scaffold_result(variant)
+            elif evaluator is not None:
                 result = evaluator(variant, cfg)
             else:
                 assert context is not None
@@ -81,18 +85,50 @@ def run_strategy_search(
     )
 
 
+def run_strategy_search_suite(
+    configs: list[StrategySearchConfig],
+    evaluator: VariantEvaluator | None = None,
+    registered_families: list[StrategyFamily] | None = None,
+) -> StrategySearchSuite:
+    rankings = [run_strategy_search(cfg, evaluator=evaluator) for cfg in configs]
+    return StrategySearchSuite(
+        rankings=rankings,
+        registered_families=registered_families or [cfg.family for cfg in configs],
+    )
+
+
 def write_strategy_search_outputs(
-    ranking: StrategyRanking,
+    ranking: StrategyRanking | StrategySearchSuite,
     reports_dir: str | Path,
-) -> tuple[Path, Path]:
+) -> tuple[Path, Path, Path]:
     out_dir = Path(reports_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     csv_path = out_dir / "strategy_search_results.csv"
     summary_path = out_dir / "strategy_search_summary.md"
+    family_summary_path = out_dir / "strategy_search_family_summary.csv"
 
-    pd.DataFrame([result_to_row(r) for r in ranking.ranked]).to_csv(csv_path, index=False)
-    summary_path.write_text(_summary_markdown(ranking, csv_path), encoding="utf-8")
-    return csv_path, summary_path
+    suite = _as_suite(ranking)
+    pd.DataFrame([result_to_row(r) for r in suite.ranked]).to_csv(csv_path, index=False)
+    pd.DataFrame(_family_summary_rows(suite)).to_csv(family_summary_path, index=False)
+    summary_path.write_text(
+        _summary_markdown(suite, csv_path, family_summary_path),
+        encoding="utf-8",
+    )
+    return csv_path, summary_path, family_summary_path
+
+
+def _scaffold_result(variant: StrategyVariant) -> ExperimentResult:
+    return ExperimentResult(
+        variant=variant,
+        n_trades=0,
+        pnl_net=0.0,
+        profit_factor=None,
+        expectancy_r=None,
+        max_drawdown_pct=None,
+        robustness_passed=False,
+        decision_status="SCAFFOLD_ONLY",
+        error="familia registrada como scaffolding: estrategia real no implementada",
+    )
 
 
 def _load_context(cfg: StrategySearchConfig) -> dict[str, Any]:
@@ -253,30 +289,142 @@ def _trades_frame_to_temp_csv(trades: pd.DataFrame) -> Path:
     return path
 
 
-def _summary_markdown(ranking: StrategyRanking, csv_path: Path) -> str:
+def _as_suite(ranking: StrategyRanking | StrategySearchSuite) -> StrategySearchSuite:
+    if isinstance(ranking, StrategySearchSuite):
+        return ranking
+    return StrategySearchSuite(rankings=[ranking], registered_families=[ranking.family])
+
+
+def _family_summary_rows(suite: StrategySearchSuite) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    rankings_by_family = {ranking.family.name: ranking for ranking in suite.rankings}
+    for family in suite.all_families:
+        ranking = rankings_by_family.get(family.name)
+        if ranking is None:
+            rows.append({
+                "family": family.name,
+                "implemented": family.implemented,
+                "base_strategy": family.base_strategy,
+                "evaluated_variants": 0,
+                "paper_candidate_count": 0,
+                "completely_rejected": True,
+                "top_variant": None,
+                "top_score": None,
+                "top_decision": "NOT_EXECUTABLE" if not family.implemented else "NOT_EVALUATED",
+                "frequent_rejection_reasons": (
+                    "scaffolding/no ejecutable" if not family.implemented else ""
+                ),
+            })
+            continue
+        rejected = [r for r in ranking.results if not r.paper_candidate]
+        top = ranking.ranked[0] if ranking.ranked else None
+        reasons = _frequent_reasons(ranking.results, limit=3)
+        rows.append({
+            "family": ranking.family.name,
+            "implemented": ranking.family.implemented,
+            "base_strategy": ranking.family.base_strategy,
+            "evaluated_variants": ranking.evaluated_variants,
+            "paper_candidate_count": len(ranking.paper_candidates),
+            "completely_rejected": len(rejected) == len(ranking.results),
+            "top_variant": None if top is None else top.variant.variant_id,
+            "top_score": None if top is None else top.rank_score,
+            "top_decision": None if top is None else top.decision_status,
+            "frequent_rejection_reasons": "; ".join(reasons),
+        })
+    return rows
+
+
+def _summary_markdown(
+    suite: StrategySearchSuite,
+    csv_path: Path,
+    family_summary_path: Path,
+) -> str:
+    family_names = [ranking.family.name for ranking in suite.rankings]
+    registered_names = [family.name for family in suite.all_families]
+    executable_names = [family.name for family in suite.executable_families]
+    scaffold_names = [family.name for family in suite.scaffold_families]
+    completely_rejected = [
+        ranking.family.name for ranking in suite.rankings
+        if ranking.results and not ranking.paper_candidates
+    ]
     lines = [
         "# Strategy Search Summary",
         "",
-        f"- **Family:** `{ranking.family.name}`",
-        f"- **Base strategy:** `{ranking.family.base_strategy}`",
-        f"- **Generated variants:** {ranking.generated_variants}",
-        f"- **Evaluated variants:** {ranking.evaluated_variants}",
+        f"- **Families registered:** {len(registered_names)}",
+        f"- **Families evaluated:** {len(family_names)}",
+        f"- **Families executable:** {len(executable_names)}",
+        f"- **Families scaffolding/no ejecutables:** {len(scaffold_names)}",
+        f"- **Evaluated families:** {', '.join(f'`{name}`' for name in family_names) or 'none'}",
+        f"- **Evaluated variants:** {suite.evaluated_variants}",
         f"- **Results CSV:** `{csv_path}`",
-        f"- **PAPER_CANDIDATE count:** {len(ranking.paper_candidates)}",
+        f"- **Family summary CSV:** `{family_summary_path}`",
+        f"- **PAPER_CANDIDATE count total:** {len(suite.paper_candidates)}",
         "",
-        "## Ranking",
+        "## Familias registradas",
+        "",
+        f"- Ejecutables: {', '.join(f'`{name}`' for name in executable_names) or 'ninguna'}",
+        f"- Scaffolding/no ejecutables: "
+        f"{', '.join(f'`{name}`' for name in scaffold_names) or 'ninguna'}",
+        "",
+        "## PAPER_CANDIDATE por familia",
+        "",
+    ]
+    for ranking in suite.rankings:
+        lines.append(f"- `{ranking.family.name}`: {len(ranking.paper_candidates)}")
+
+    lines += [
+        "",
+        "## Top 10 global",
         "",
         "| Rank | Variant | Score | Decision | Filters | Robust | Trades | PF | Exp R | DD % |",
         "|---:|---|---:|---|---|---|---:|---:|---:|---:|",
     ]
-    for i, result in enumerate(ranking.ranked, start=1):
+    for i, result in enumerate(suite.ranked[:10], start=1):
         lines.append(
-            f"| {i} | `{result.variant.variant_id}` | {result.rank_score:.2f} | "
+            f"| {i} | `{result.variant.family}/{result.variant.variant_id}` | "
+            f"{result.rank_score:.2f} | "
             f"{result.decision_status} | {'pass' if result.passed_filters else 'fail'} | "
             f"{'pass' if result.robustness_passed else 'fail'} | {result.n_trades} | "
             f"{_fmt(result.profit_factor)} | {_fmt(result.expectancy_r)} | "
             f"{_fmt(result.max_drawdown_pct)} |"
         )
+
+    lines += ["", "## Top 3 por familia", ""]
+    for ranking in suite.rankings:
+        lines += [f"### {ranking.family.name}", ""]
+        for i, result in enumerate(ranking.ranked[:3], start=1):
+            lines.append(
+                f"{i}. `{result.variant.variant_id}` score={result.rank_score:.2f} "
+                f"decision={result.decision_status} filters="
+                f"{'pass' if result.passed_filters else 'fail'} robust="
+                f"{'pass' if result.robustness_passed else 'fail'}"
+            )
+        if not ranking.ranked:
+            lines.append("Sin variantes evaluadas.")
+        lines.append("")
+
+    lines += [
+        "## Familias completamente rechazadas",
+        "",
+    ]
+    lines += [f"- `{name}`" for name in completely_rejected] or ["- Ninguna."]
+
+    lines += [
+        "",
+        "## Familias no ejecutables/scaffolding",
+        "",
+    ]
+    lines += [f"- `{name}`" for name in scaffold_names] or ["- Ninguna."]
+
+    lines += [
+        "",
+        "## Motivos frecuentes de rechazo",
+        "",
+    ]
+    lines += [f"- {reason}" for reason in _frequent_reasons(suite.ranked, limit=8)] or [
+        "- Sin rechazos registrados."
+    ]
+
     lines += [
         "",
         "## Nota metodologica",
@@ -288,6 +436,19 @@ def _summary_markdown(ranking: StrategyRanking, csv_path: Path) -> str:
         "",
     ]
     return "\n".join(lines)
+
+
+def _frequent_reasons(results: list[ExperimentResult], *, limit: int) -> list[str]:
+    counts: dict[str, int] = {}
+    for result in results:
+        reasons = result.rejection_reasons or ([result.error] if result.error else [])
+        for reason in reasons:
+            if reason:
+                counts[reason] = counts.get(reason, 0) + 1
+    return [
+        f"{reason} ({count})"
+        for reason, count in sorted(counts.items(), key=lambda item: item[1], reverse=True)[:limit]
+    ]
 
 
 def _none_if_nan(value: Any) -> float | None:
@@ -311,5 +472,6 @@ __all__ = [
     "VariantEvaluator",
     "experiment_result_from_backtest",
     "run_strategy_search",
+    "run_strategy_search_suite",
     "write_strategy_search_outputs",
 ]

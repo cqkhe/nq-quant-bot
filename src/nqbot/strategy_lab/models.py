@@ -42,6 +42,12 @@ class StrategyFamily:
     parameter_grid: ParameterGrid
     description: str = ""
     fixed_params: dict[str, Any] = field(default_factory=dict)
+    implemented: bool = True
+    hypothesis: str = ""
+    works_when: str = ""
+    fails_when: str = ""
+    overfitting_risk: str = "medio"
+    main_params: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -115,6 +121,41 @@ class StrategyRanking:
 
 
 @dataclass(frozen=True)
+class StrategySearchSuite:
+    rankings: list[StrategyRanking]
+    registered_families: list[StrategyFamily] = field(default_factory=list)
+
+    @property
+    def ranked(self) -> list[ExperimentResult]:
+        all_results = [r for ranking in self.rankings for r in ranking.results]
+        return sorted(all_results, key=lambda r: r.rank_score, reverse=True)
+
+    @property
+    def paper_candidates(self) -> list[ExperimentResult]:
+        return [r for r in self.ranked if r.paper_candidate]
+
+    @property
+    def evaluated_families(self) -> int:
+        return len(self.rankings)
+
+    @property
+    def all_families(self) -> list[StrategyFamily]:
+        return self.registered_families or [ranking.family for ranking in self.rankings]
+
+    @property
+    def executable_families(self) -> list[StrategyFamily]:
+        return [family for family in self.all_families if family.implemented]
+
+    @property
+    def scaffold_families(self) -> list[StrategyFamily]:
+        return [family for family in self.all_families if not family.implemented]
+
+    @property
+    def evaluated_variants(self) -> int:
+        return sum(r.evaluated_variants for r in self.rankings)
+
+
+@dataclass(frozen=True)
 class StrategySearchConfig:
     family: StrategyFamily
     symbol: str
@@ -174,6 +215,7 @@ __all__ = [
     "StrategyFilterConfig",
     "StrategyRanking",
     "StrategySearchConfig",
+    "StrategySearchSuite",
     "StrategyVariant",
     "make_variant",
     "result_to_row",
