@@ -95,8 +95,47 @@ def evaluate(metrics: ExperimentMetrics, criteria: PaperCriteria | None = None) 
     if m.max_losing_streak is not None:
         add("racha_perdedora (informativo)", None, f"{m.max_losing_streak} trades")
 
+    # ---- robustez cuantitativa (opcional; si se informa, gatea PAPER)
+    robustness_gate: list[bool | None] = []
+    if m.mc_probability_negative is not None:
+        ok = m.mc_probability_negative <= cfg.max_mc_probability_negative
+        robustness_gate.append(ok)
+        add("robustez_mc_probabilidad_negativa", ok,
+            f"{m.mc_probability_negative:.1%} "
+            f"(maximo {cfg.max_mc_probability_negative:.0%})")
+
+    if m.mc_probability_extreme_drawdown is not None:
+        ok = m.mc_probability_extreme_drawdown <= cfg.max_mc_probability_extreme_drawdown
+        robustness_gate.append(ok)
+        add("robustez_mc_drawdown_extremo", ok,
+            f"{m.mc_probability_extreme_drawdown:.1%} "
+            f"(maximo {cfg.max_mc_probability_extreme_drawdown:.0%})")
+
+    if m.bootstrap_probability_expectancy_le_zero is not None:
+        ok = (
+            m.bootstrap_probability_expectancy_le_zero
+            <= cfg.max_bootstrap_probability_expectancy_le_zero
+        )
+        robustness_gate.append(ok)
+        add("robustez_bootstrap_expectancia_no_positiva", ok,
+            f"{m.bootstrap_probability_expectancy_le_zero:.1%} "
+            f"(maximo {cfg.max_bootstrap_probability_expectancy_le_zero:.0%})")
+
+    if m.depends_on_few_winners is not None:
+        ok = not m.depends_on_few_winners
+        robustness_gate.append(ok)
+        add("robustez_no_depende_de_pocos_ganadores", ok,
+            "no depende de pocos ganadores" if ok else "depende demasiado de pocos ganadores")
+
+    if m.cost_stress_survives is not None:
+        ok = m.cost_stress_survives
+        robustness_gate.append(ok)
+        add("robustez_sobrevive_costos", ok,
+            "sobrevive costos razonablemente mas altos" if ok
+            else "falla con costos razonablemente mas altos")
+
     # ---------------------------------------------------------- árbol de decisión
-    paper_gate = [trades_ok, pf_ok, expr_ok, dd_ok, dep_ok, oos_ok, clean_ok]
+    paper_gate = [trades_ok, pf_ok, expr_ok, dd_ok, dep_ok, oos_ok, clean_ok] + robustness_gate
     perf_grade = (trades_ok and pf_ok is True and expr_ok is True and dd_ok is True)
     has_edge_signal = (m.expectancy_r or 0) > 0 and (m.profit_factor or 0) >= 1.0
     no_edge = (m.expectancy_r is not None and m.expectancy_r <= 0) or (
@@ -114,7 +153,7 @@ def evaluate(metrics: ExperimentMetrics, criteria: PaperCriteria | None = None) 
     elif perf_grade:
         status = DecisionStatus.BLOCKED_FOR_PAPER
         reasons.append("Performance de nivel paper, pero la validación no está limpia o completa "
-                       "(OOS/contaminación/dependencia sin verificar o fallidos).")
+                       "(OOS/contaminación/dependencia/robustez sin verificar o fallidos).")
         recommendation = (
             "Conseguir validación out-of-sample virgen y completar los criterios faltantes "
             "antes de volver a evaluar. No proponer para paper en este estado."

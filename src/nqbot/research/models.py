@@ -36,6 +36,9 @@ class PaperCriteria:
     min_expectancy_r: float = 0.0        # exclusivo: la expectancia debe ser > 0
     max_drawdown_pct: float = 10.0       # sobre el capital, mark-to-market
     min_sample_for_verdict: int = 30     # por debajo: OBSERVATION (muestra insuficiente)
+    max_mc_probability_negative: float = 0.20
+    max_mc_probability_extreme_drawdown: float = 0.20
+    max_bootstrap_probability_expectancy_le_zero: float = 0.25
 
 
 @dataclass
@@ -62,6 +65,11 @@ class ExperimentMetrics:
     pnl_without_top5: float | None = None          # dependencia de pocos trades
     is_out_of_sample: bool | None = None           # declarado por el investigador
     overlaps_design_period: bool | None = None     # contaminación con el diseño
+    mc_probability_negative: float | None = None
+    mc_probability_extreme_drawdown: float | None = None
+    bootstrap_probability_expectancy_le_zero: float | None = None
+    depends_on_few_winners: bool | None = None
+    cost_stress_survives: bool | None = None
 
 
 @dataclass(frozen=True)

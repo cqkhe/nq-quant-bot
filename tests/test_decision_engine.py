@@ -81,6 +81,18 @@ def test_paper_candidate_requires_positive_oos_pnl():
     assert decision.status != DecisionStatus.PAPER_CANDIDATE
 
 
+def test_robustness_fields_can_block_paper_candidate():
+    decision = evaluate(make_metrics(
+        mc_probability_negative=0.35,
+        mc_probability_extreme_drawdown=0.05,
+        bootstrap_probability_expectancy_le_zero=0.10,
+        depends_on_few_winners=False,
+        cost_stress_survives=True,
+    ))
+    assert decision.status == DecisionStatus.BLOCKED_FOR_PAPER
+    assert any("robustez_mc_probabilidad_negativa" == c.name for c in decision.failed)
+
+
 # ---------------------------------------------------------------- adaptadores
 def test_metrics_from_comparison_csv(tmp_path):
     csv = tmp_path / "validation.csv"
