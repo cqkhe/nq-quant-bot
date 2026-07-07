@@ -27,6 +27,11 @@ from .models import (
     HypothesisValidationPlan,
     PaperCriteria,
 )
+from .factory import (
+    ResearchWorkflowConfig,
+    ResearchWorkflowResult,
+    run_research_workflow,
+)
 
 __all__ = [
     "CONTAMINATED_DATASETS",
@@ -43,6 +48,8 @@ __all__ = [
     "HypothesisType",
     "HypothesisValidationPlan",
     "PaperCriteria",
+    "ResearchWorkflowConfig",
+    "ResearchWorkflowResult",
     "check_oos_contamination",
     "compute_priority",
     "evaluate",
@@ -50,6 +57,7 @@ __all__ = [
     "metrics_from_comparison_csv",
     "metrics_from_report_folder",
     "missing_for_design",
+    "run_research_workflow",
     "save_hypothesis",
     "validate_hypothesis",
 ]
