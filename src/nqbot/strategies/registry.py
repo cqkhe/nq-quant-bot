@@ -15,6 +15,7 @@ from .daytrading_vwap_liquidity_rr2 import DaytradingVwapLiquidityRR2
 from .variants_rr2 import (
     LongsOnlyRR2,
     MorningOnlyRR2,
+    NoMiddayAtrFilterDynamicExitH002,
     NoMiddayAtrFilterRR2,
     NoMiddayLongsOnlyRR2,
     NoMiddayNearVwapRR2,
@@ -31,6 +32,7 @@ _REGISTRY: dict[str, type[Strategy]] = {
     NoMiddayLongsOnlyRR2.name: NoMiddayLongsOnlyRR2,
     NoMiddayNearVwapRR2.name: NoMiddayNearVwapRR2,
     NoMiddayAtrFilterRR2.name: NoMiddayAtrFilterRR2,
+    NoMiddayAtrFilterDynamicExitH002.name: NoMiddayAtrFilterDynamicExitH002,
 }
 
 

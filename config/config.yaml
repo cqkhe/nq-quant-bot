@@ -144,5 +144,14 @@ strategy:
     blocked_entry_windows: [["11:00", "13:00"]]
     min_atr20_points: 8.0
 
+  # Prueba de investigación H002 (ficha research/hypotheses/H002_*): salida
+  # dinámica si no alcanza +0.5R en 30 min. REGLA CONGELADA por la ficha:
+  # cambiar estos valores requiere una hipótesis nueva registrada.
+  daytrading_vwap_liquidity_rr2_no_midday_atr_filter_dynamic_exit_h002:
+    blocked_entry_windows: [["11:00", "13:00"]]
+    min_atr20_points: 8.0
+    h002_max_minutes: 30.0
+    h002_min_mfe_r: 0.5
+
 # Ejecución real: deshabilitada por diseño. Ver .env.example (doble llave).
 live_trading: false

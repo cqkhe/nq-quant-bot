@@ -1,0 +1,10 @@
+dataset,estrategia,trades,pnl_net,profit_factor,winrate_pct,expectancy_r,max_drawdown_usd,max_drawdown_pct,racha_perdedora_max,targets,stops,session_flatten,early_exits,early_exit_pnl,early_exit_r_prom
+2024,daytrading_vwap_liquidity_rr2_no_midday_atr_filter,258,-2948.06,0.818,31.78,-0.12,3553.2,13.99,12,71,166,21,0,0.0,
+2024,daytrading_vwap_liquidity_rr2_no_midday_atr_filter_dynamic_exit_h002,264,-3128.44,0.798,31.44,-0.115,3844.24,15.07,10,66,151,17,30,-603.56,-0.226
+2024,delta,6,-180.38,-0.02,-0.34,0.005,291.04,1.08,-2,-5,-15,-4,30,-603.56,
+2025_ene_nov,daytrading_vwap_liquidity_rr2_no_midday_atr_filter,166,572.86,1.059,37.95,0.061,1323.04,5.26,9,57,101,8,0,0.0,
+2025_ene_nov,daytrading_vwap_liquidity_rr2_no_midday_atr_filter_dynamic_exit_h002,169,566.96,1.061,37.28,0.066,1151.84,4.57,10,54,88,7,20,-546.6,-0.341
+2025_ene_nov,delta,3,-5.9,0.002,-0.67,0.005,-171.2,-0.69,1,-3,-13,-1,20,-546.6,
+2025_2026_completo,daytrading_vwap_liquidity_rr2_no_midday_atr_filter,233,3446.46,1.271,42.06,0.166,1323.04,5.26,9,85,131,17,0,0.0,
+2025_2026_completo,daytrading_vwap_liquidity_rr2_no_midday_atr_filter_dynamic_exit_h002,240,3424.92,1.279,41.25,0.165,1151.84,4.57,10,82,115,14,29,-727.82,-0.303
+2025_2026_completo,delta,7,-21.54,0.008,-0.81,-0.001,-171.2,-0.69,1,-3,-16,-3,29,-727.82,

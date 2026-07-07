@@ -21,7 +21,12 @@ from typing import Any
 
 import pandas as pd
 
-from ..backtesting.models import Signal
+from ..backtesting.models import (
+    EarlyExitReason,
+    EarlyExitSignal,
+    Signal,
+    TradeState,
+)
 from ..config.settings import _parse_time
 from .daytrading_vwap_liquidity_rr2 import DaytradingVwapLiquidityRR2
 
@@ -159,6 +164,40 @@ class NoMiddayAtrFilterRR2(NoMiddayRR2):
         out["long_setup"] = out["long_setup"] & atr_ok
         out["short_setup"] = out["short_setup"] & atr_ok
         return out
+
+
+class NoMiddayAtrFilterDynamicExitH002(NoMiddayAtrFilterRR2):
+    """Variante de prueba de H002: salida dinámica por falta de progreso.
+
+    Hereda TODO de atr_filter (entradas, stop, target, RR, no_midday, filtro
+    ATR intactos). Cambio ÚNICO — la regla CONGELADA de la ficha H002
+    (research/hypotheses/H002_dynamic_exit_no_progress.md):
+
+        Si la posición sigue abierta a los 30 minutos y su MFE nunca
+        alcanzó +0.5R, salida a mercado (early_exit, "no_progress_30m_05r").
+
+    Parámetros `h002_max_minutes=30` / `h002_min_mfe_r=0.5` expuestos en
+    config SOLO por transparencia: están congelados por la ficha. Probar
+    otros valores sin nueva hipótesis registrada = curve fitting.
+
+    Estado: prueba de investigación (H002). NO es una estrategia operable.
+    """
+
+    name = "daytrading_vwap_liquidity_rr2_no_midday_atr_filter_dynamic_exit_h002"
+
+    @classmethod
+    def default_params(cls) -> dict[str, Any]:
+        return {**super().default_params(), "h002_max_minutes": 30.0, "h002_min_mfe_r": 0.5}
+
+    def should_exit_early(
+        self, ts, row: pd.Series, trade_state: TradeState
+    ) -> EarlyExitSignal | None:
+        if (
+            trade_state.minutes_held >= self.params["h002_max_minutes"]
+            and trade_state.mfe_r < self.params["h002_min_mfe_r"]
+        ):
+            return EarlyExitSignal(EarlyExitReason.NO_PROGRESS, "no_progress_30m_05r")
+        return None
 
 
 class NoMiddayNearVwapRR2(NoMiddayRR2):

@@ -123,6 +123,51 @@ def test_atr_filter_registered_and_only_adds_threshold():
         assert s.params[key] == value  # no cambia ningún parámetro heredado
 
 
+H002_VARIANT = "daytrading_vwap_liquidity_rr2_no_midday_atr_filter_dynamic_exit_h002"
+
+
+def _trade_state(minutes: float, mfe_r: float):
+    from datetime import datetime
+
+    from nqbot.backtesting.models import TradeState
+
+    return TradeState(
+        direction=1, contracts=1, entry_time=datetime(2026, 1, 5, 10, 0),
+        entry_price=21000.0, stop_price=20990.0, target_price=21020.0,
+        initial_risk_dollars=20.0, bars_held=int(minutes), minutes_held=minutes,
+        current_close=21000.0, current_r=0.0, mfe_r=mfe_r, mae_r=0.3,
+    )
+
+
+def test_h002_variant_registered_and_inherits_everything():
+    s = make(H002_VARIANT)
+    assert H002_VARIANT in available_strategies()
+    base = make("daytrading_vwap_liquidity_rr2_no_midday_atr_filter")
+    for key, value in base.params.items():
+        assert s.params[key] == value          # entrada/RR/ATR/midday intactos
+    assert s.params["h002_max_minutes"] == 30.0
+    assert s.params["h002_min_mfe_r"] == 0.5
+
+
+def test_h002_frozen_rule_fires_exactly_when_specified():
+    from nqbot.backtesting.models import EarlyExitReason
+
+    s = make(H002_VARIANT)
+    row = long_row()  # irrelevante para la regla
+    # estancado a los 30 min -> sale
+    signal = s.should_exit_early(at(10, 30), row, _trade_state(30.0, 0.4))
+    assert signal is not None
+    assert signal.reason == EarlyExitReason.NO_PROGRESS
+    assert signal.detail == "no_progress_30m_05r"
+    # a los 29 min todavía no
+    assert s.should_exit_early(at(10, 29), row, _trade_state(29.0, 0.4)) is None
+    # con MFE >= 0.5R nunca (aunque pasen los 30 min)
+    assert s.should_exit_early(at(11, 0), row, _trade_state(60.0, 0.5)) is None
+    # la base NO tiene salida dinámica
+    assert make("daytrading_vwap_liquidity_rr2_no_midday_atr_filter").should_exit_early(
+        at(10, 30), row, _trade_state(30.0, 0.4)) is None
+
+
 def test_atr_filter_blocks_dead_tape_and_is_neutral_at_zero():
     """La sesión sintética tiene ATR-20 ~0.75 pts (cinta muerta): con el
     umbral default el setup se filtra; con umbral 0 la variante es idéntica

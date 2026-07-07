@@ -4,7 +4,7 @@
 |---|---|
 | **ID** | H002 |
 | **Fecha de registro** | 2026-07-05 |
-| **Estado** | DESIGNED |
+| **Estado** | TESTED (2026-07-05) — decisión: **OBSERVATION** (ver D002) |
 | **Tipo** | EXIT_LOGIC |
 | **Prioridad (calculada)** | ALTA — impacto ALTO, claridad ALTA, riesgo CF MEDIO |
 | **Origen** | Cierre de H001 + diagnóstico dedicado reports/dynamic_exit_diagnosis_summary.md (2026-07-05, 287 trades de no_midday sobre 18 meses). |
@@ -54,8 +54,23 @@ ESTADO: la hipótesis **sigue en DESIGNED**. La variante (`..._dynamic_exit` o s
 
 ## Resultado final
 
-*(pendiente)*
+**Probada el 2026-07-05** con la variante `..._dynamic_exit_h002` sobre los
+tres datasets de diseño (`reports/h002_dynamic_exit_summary.md`):
+
+- **El mecanismo replicó en los tres**: beneficio directo de la regla en los
+  trades compartidos **+$185 (2024), +$290 (2025), +$493 (completo)**; los
+  trades cortados eran 69-79% stop-bound en la base; solo 11-17% habría
+  llegado a target (límite de la ficha: 20% — CUMPLE).
+- **El neto quedó ~plano**: ΔPnL -$180 / -$6 / -$22, expR ±0.005. Causa
+  identificada: el slot liberado toma trades nuevos que pierden
+  (**-$755 / -$418 / -$636**) — cuarta observación consecutiva del patrón
+  "trades por re-secuenciación son tóxicos" en la historia del proyecto.
+- Drawdown: mejora en 2025 y completo (-$171), empeora en 2024 (+$291).
 
 ## Decisión
 
-*(pendiente — se registra como DXXX en research/decisions/)*
+**D002 — OBSERVATION** (`research/decisions/D002_h002_dynamic_exit_result.md`).
+El mecanismo es real pero su beneficio lo cancela un efecto colateral
+separable. Deriva una hipótesis nueva candidata (bloquear re-entrada tras un
+early_exit). La regla no se modifica sin nueva ficha; el OOS virgen
+(jul-2026+ / 2023) sigue reservado.
