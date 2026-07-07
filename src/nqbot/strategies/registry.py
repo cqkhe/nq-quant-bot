@@ -12,6 +12,16 @@ from ..config.settings import ContractSpec
 from .base import Strategy
 from .base_vwap_ema import BaseVwapEmaStrategy
 from .daytrading_vwap_liquidity_rr2 import DaytradingVwapLiquidityRR2
+from .ohlcv_volume import (
+    GaussianVolumeBreakout,
+    GaussianVolumeDryUpBreakout,
+    GaussianVolumeReversal,
+    OpeningRangeVolumeBreakout,
+    RelativeVolumeBreakout,
+    VolumeClimaxReversal,
+    VolumeDryUpBreakout,
+    VwapVolumeReclaim,
+)
 from .variants_rr2 import (
     LongsOnlyRR2,
     MorningOnlyRR2,
@@ -33,6 +43,15 @@ _REGISTRY: dict[str, type[Strategy]] = {
     NoMiddayNearVwapRR2.name: NoMiddayNearVwapRR2,
     NoMiddayAtrFilterRR2.name: NoMiddayAtrFilterRR2,
     NoMiddayAtrFilterDynamicExitH002.name: NoMiddayAtrFilterDynamicExitH002,
+    # Fase 10: estrategias OHLCV-only de volumen para research/backtest.
+    RelativeVolumeBreakout.name: RelativeVolumeBreakout,
+    VolumeClimaxReversal.name: VolumeClimaxReversal,
+    VolumeDryUpBreakout.name: VolumeDryUpBreakout,
+    OpeningRangeVolumeBreakout.name: OpeningRangeVolumeBreakout,
+    GaussianVolumeBreakout.name: GaussianVolumeBreakout,
+    GaussianVolumeReversal.name: GaussianVolumeReversal,
+    GaussianVolumeDryUpBreakout.name: GaussianVolumeDryUpBreakout,
+    VwapVolumeReclaim.name: VwapVolumeReclaim,
 }
 
 

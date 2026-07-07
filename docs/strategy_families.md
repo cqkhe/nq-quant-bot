@@ -189,10 +189,13 @@ pasados, usando `shift(1)` o una tecnica equivalente.
 - Parametros previstos: `momentum_window`, `min_session_return`,
   `volume_ratio`.
 
-## Familias de volumen OHLCV en scaffolding
+## Familias de volumen OHLCV
 
-Estas familias estan registradas pero no son ejecutables. Necesitan una
-estrategia real y tests antes de entrar en `--family all`.
+En Fase 10, `relative_volume_breakout`, `volume_climax_reversal`,
+`volume_dry_up_breakout`, `opening_range_volume_breakout` y
+`vwap_volume_reclaim` pasan a ejecutables con estrategias reales OHLCV-only y
+tests. Las demas familias de esta seccion siguen como scaffolding hasta tener
+implementacion propia.
 
 ### relative_volume_breakout
 
@@ -201,9 +204,10 @@ estrategia real y tests antes de entrar en `--family all`.
 - Deberia funcionar: rango definido, compresion inicial y expansion con
   volumen creciente.
 - Deberia fallar: rupturas sin follow-through, news whipsaw y spikes aislados.
-- Riesgo de overfitting: alto hasta tener implementacion y validation/OOS.
-- Parametros previstos: `rel_volume_threshold`, `volume_window`,
-  `opening_range_minutes`.
+- Estado: ejecutable desde Fase 10.
+- Riesgo de overfitting: alto; requiere validation/OOS.
+- Parametros: `rel_volume_threshold`, `volume_window`, `breakout_lookback`,
+  `rr`.
 
 ### volume_climax_reversal
 
@@ -211,9 +215,9 @@ estrategia real y tests antes de entrar en `--family all`.
   agotamiento de corto plazo.
 - Deberia funcionar: extremos de rango/VWAP extendidos con rechazo claro.
 - Deberia fallar: volumen alto de continuacion y breakouts aceptados.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto por sensibilidad a umbrales de spike/rechazo.
-- Parametros previstos: `spike_threshold`, `volume_window`,
-  `rejection_close_pct`.
+- Parametros: `spike_threshold`, `volume_window`, `rejection_close_pct`, `rr`.
 
 ### volume_dry_up_breakout
 
@@ -221,9 +225,10 @@ estrategia real y tests antes de entrar en `--family all`.
 - Deberia funcionar: compresion de rango, baja participacion y ruptura con
   volumen creciente.
 - Deberia fallar: baja liquidez persistente o expansion sin continuidad.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto por elegir ventanas de compresion post-hoc.
-- Parametros previstos: `dry_up_threshold`, `rel_volume_threshold`,
-  `volume_window`.
+- Parametros: `dry_up_threshold`, `rel_volume_threshold`, `volume_window`,
+  `breakout_lookback`.
 
 ### volume_expansion_continuation
 
@@ -231,6 +236,7 @@ estrategia real y tests antes de entrar en `--family all`.
 - Deberia funcionar: desplazamientos con cierre fuerte y participacion
   creciente.
 - Deberia fallar: barras climax de agotamiento o extension lejos de valor.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto si se ajusta el ATR/volumen al periodo probado.
 - Parametros previstos: `rel_volume_threshold`, `min_atr20_points`, `rr`.
 
@@ -240,6 +246,7 @@ estrategia real y tests antes de entrar en `--family all`.
   revertir al rango.
 - Deberia funcionar: barrida de nivel, retorno rapido al rango y rechazo.
 - Deberia fallar: ruptura real con aceptacion y continuacion.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por definicion de fallo y ventana de confirmacion.
 - Parametros previstos: `rel_volume_threshold`, `failure_bars`,
   `rejection_close_pct`.
@@ -250,6 +257,7 @@ estrategia real y tests antes de entrar en `--family all`.
 - Deberia funcionar: tendencia clara, pullback ordenado y reanudacion con
   volumen normal/alto.
 - Deberia fallar: tendencias agotadas o pullbacks que pasan a reversal.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por dependencia de clasificacion de tendencia.
 - Parametros previstos: `dry_up_threshold`, `pullback_lookback`, `rr`.
 
@@ -259,24 +267,27 @@ estrategia real y tests antes de entrar en `--family all`.
   control.
 - Deberia funcionar: falso quiebre alrededor de VWAP y aceptacion posterior.
 - Deberia fallar: VWAP plana, rangos estrechos o reclaim sin participacion.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto por distancia a VWAP y umbral de volumen.
-- Parametros previstos: `rel_volume_threshold`, `max_vwap_distance_points`,
-  `volume_window`.
+- Parametros: `rel_volume_threshold`, `max_vwap_distance_points`,
+  `volume_window`, `rr`.
 
 ### opening_range_volume_breakout
 
 - Hipotesis: la ruptura del opening range necesita volumen superior al promedio.
 - Deberia funcionar: open con rango claro y expansion direccional.
 - Deberia fallar: aperturas erraticas y stop runs sin aceptacion.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto si se ajusta el rango inicial al dataset.
-- Parametros previstos: `opening_range_minutes`, `rel_volume_threshold`,
-  `volume_window`.
+- Parametros: `opening_range_minutes`, `rel_volume_threshold`, `volume_window`,
+  `rr`.
 
 ### volume_spike_mean_reversion
 
 - Hipotesis: un spike de volumen lejos de VWAP puede indicar agotamiento.
 - Deberia funcionar: extension de precio, spike de volumen y rechazo claro.
 - Deberia fallar: spikes que inician tendencia o news con continuidad.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por umbrales de extension y rechazo.
 - Parametros previstos: `spike_threshold`, `max_vwap_distance_points`,
   `rejection_close_pct`.
@@ -287,13 +298,15 @@ estrategia real y tests antes de entrar en `--family all`.
   participacion.
 - Deberia funcionar: tendencias con EMAs/VWAP alineadas y volumen normal-alto.
 - Deberia fallar: avances con participacion decreciente o climax final.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto si se usa volumen para filtrar demasiado.
 - Parametros previstos: `rel_volume_threshold`, `volume_window`, `rr`.
 
-## Familias gaussian_volume en scaffolding
+## Familias gaussian_volume
 
-Estas familias tambien son scaffolding. El z-score de volumen es una proxy
-estadistica OHLCV y no reemplaza order flow real.
+En Fase 10, `gaussian_volume_breakout`, `gaussian_volume_reversal` y
+`gaussian_volume_dry_up_breakout` pasan a ejecutables. El z-score de volumen
+sigue siendo una proxy estadistica OHLCV y no reemplaza order flow real.
 
 ### gaussian_volume_breakout
 
@@ -302,18 +315,20 @@ estadistica OHLCV y no reemplaza order flow real.
 - Deberia funcionar: rango definido y volumen estadisticamente alto no
   climatico.
 - Deberia fallar: spikes aislados o barras de agotamiento.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto por umbrales de z-score y ventanas.
-- Parametros previstos: `volume_window`, `volume_zscore_threshold`,
-  `opening_range_minutes`.
+- Parametros: `volume_window`, `volume_zscore_threshold`,
+  `breakout_lookback`, `rr`.
 
 ### gaussian_volume_reversal
 
 - Hipotesis: volumen estadisticamente extremo con rechazo puede revertir.
 - Deberia funcionar: z-score alto, rechazo y cierre contrario al impulso.
 - Deberia fallar: continuacion fuerte con volumen persistentemente alto.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto por definicion de rechazo y nivel extremo.
-- Parametros previstos: `volume_window`, `volume_zscore_threshold`,
-  `rejection_close_pct`.
+- Parametros: `volume_window`, `volume_zscore_threshold`,
+  `rejection_close_pct`, `rr`.
 
 ### gaussian_volume_climax
 
@@ -321,6 +336,7 @@ estadistica OHLCV y no reemplaza order flow real.
 - Deberia funcionar: extremos de precio con `volume_zscore` > 2.0/2.5.
 - Deberia fallar: sesiones de tendencia donde el volumen extremo confirma
   aceptacion.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por seleccionar el umbral despues del resultado.
 - Parametros previstos: `volume_window`, `volume_zscore_threshold`,
   `rejection_close_pct`.
@@ -330,15 +346,17 @@ estadistica OHLCV y no reemplaza order flow real.
 - Hipotesis: z-score bajo previo puede preceder una expansion con volumen.
 - Deberia funcionar: compresion estadistica y ruptura con z-score positivo.
 - Deberia fallar: compresion que no expande o baja liquidez persistente.
+- Estado: ejecutable desde Fase 10.
 - Riesgo de overfitting: alto por combinar dos umbrales de z-score.
-- Parametros previstos: `volume_window`, `dry_up_zscore_threshold`,
-  `volume_zscore_threshold`.
+- Parametros: `volume_window`, `dry_up_zscore_threshold`,
+  `volume_zscore_threshold`, `breakout_lookback`.
 
 ### gaussian_volume_trend_confirmation
 
 - Hipotesis: la tendencia mejora cuando el volumen supera su media reciente.
 - Deberia funcionar: tendencia alineada y volumen positivo en impulsos.
 - Deberia fallar: tendencia agotada o volumen extremo de climax.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por filtrar trades hasta dejar pocos casos.
 - Parametros previstos: `volume_window`, `volume_zscore_threshold`, `rr`.
 
@@ -347,6 +365,7 @@ estadistica OHLCV y no reemplaza order flow real.
 - Hipotesis: un breakout con z-score extremo que falla puede volver al rango.
 - Deberia funcionar: ruptura, fallo rapido y retorno con rechazo.
 - Deberia fallar: breakout aceptado fuera del nivel.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por ventana de fallo y umbral extremo.
 - Parametros previstos: `volume_window`, `volume_zscore_threshold`,
   `failure_bars`.
@@ -356,6 +375,7 @@ estadistica OHLCV y no reemplaza order flow real.
 - Hipotesis: z-score extremo lejos de VWAP puede senalar exhaustacion.
 - Deberia funcionar: extension a distancia de VWAP con rechazo.
 - Deberia fallar: tendencia que acepta nuevos niveles y no vuelve a valor.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por distancia a VWAP y z-score.
 - Parametros previstos: `volume_window`, `volume_zscore_threshold`,
   `max_vwap_distance_points`.
@@ -366,6 +386,7 @@ estadistica OHLCV y no reemplaza order flow real.
   continuar.
 - Deberia funcionar: vela expansiva, cierre fuerte y z-score alto no climatico.
 - Deberia fallar: barra final de climax o movimiento extendido.
+- Estado: scaffolding.
 - Riesgo de overfitting: alto por elegir ventana/umbral sobre el historico.
 - Parametros previstos: `volume_window`, `volume_zscore_threshold`, `rr`.
 

@@ -29,6 +29,30 @@ def _scaffold(
     )
 
 
+def _implemented_volume(
+    name: str,
+    *,
+    description: str,
+    hypothesis: str,
+    works_when: str,
+    fails_when: str,
+    main_params: tuple[str, ...],
+    parameter_grid: ParameterGrid,
+) -> StrategyFamily:
+    return StrategyFamily(
+        name=name,
+        base_strategy=name,
+        description=description,
+        parameter_grid=parameter_grid,
+        implemented=True,
+        hypothesis=hypothesis,
+        works_when=works_when,
+        fails_when=fails_when,
+        overfitting_risk="alto: primera implementacion OHLCV-only, requiere OOS",
+        main_params=main_params,
+    )
+
+
 _FAMILIES: dict[str, StrategyFamily] = {
     "rr2_atr_filter": StrategyFamily(
         name="rr2_atr_filter",
@@ -232,22 +256,23 @@ _FAMILIES: dict[str, StrategyFamily] = {
 }
 
 _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
-    "relative_volume_breakout": _scaffold(
+    "relative_volume_breakout": _implemented_volume(
         "relative_volume_breakout",
         description=(
-            "Breakout confirmado por volumen relativo OHLCV; pendiente de estrategia real."
+            "Breakout contra rango previo confirmado por volumen relativo OHLCV."
         ),
         hypothesis="Una ruptura con participacion superior al promedio tiene mas continuidad.",
         works_when="rangos definidos, apertura comprimida y expansion con volumen creciente",
         fails_when="spikes aislados, news whipsaw o rupturas sin aceptacion",
-        main_params=("rel_volume_threshold", "volume_window", "opening_range_minutes"),
+        main_params=("rel_volume_threshold", "volume_window", "breakout_lookback"),
         parameter_grid=ParameterGrid({
             "rel_volume_threshold": [1.2, 1.5],
             "volume_window": [20, 50],
-            "opening_range_minutes": [15, 30],
+            "breakout_lookback": [20, 30],
+            "rr": [1.5, 2.0],
         }),
     ),
-    "volume_climax_reversal": _scaffold(
+    "volume_climax_reversal": _implemented_volume(
         "volume_climax_reversal",
         description="Reversion tras volumen climatico OHLCV y rechazo de precio.",
         hypothesis="Un pico de volumen con rechazo cerca de extremos puede indicar agotamiento.",
@@ -258,9 +283,10 @@ _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "spike_threshold": [1.5, 2.0],
             "volume_window": [20, 50],
             "rejection_close_pct": [0.55, 0.65],
+            "rr": [1.5],
         }),
     ),
-    "volume_dry_up_breakout": _scaffold(
+    "volume_dry_up_breakout": _implemented_volume(
         "volume_dry_up_breakout",
         description="Ruptura tras compresion con volumen seco.",
         hypothesis="La contraccion de participacion puede preceder una expansion direccional.",
@@ -271,6 +297,7 @@ _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "dry_up_threshold": [0.6, 0.8],
             "rel_volume_threshold": [1.2, 1.5],
             "volume_window": [20, 50],
+            "breakout_lookback": [20],
         }),
     ),
     "volume_expansion_continuation": _scaffold(
@@ -312,7 +339,7 @@ _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "rr": [1.5, 2.0],
         }),
     ),
-    "vwap_volume_reclaim": _scaffold(
+    "vwap_volume_reclaim": _implemented_volume(
         "vwap_volume_reclaim",
         description="Reclaim de VWAP confirmado por volumen relativo.",
         hypothesis="Recuperar VWAP con volumen puede marcar cambio de control intradia.",
@@ -323,9 +350,10 @@ _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "rel_volume_threshold": [1.2, 1.5],
             "max_vwap_distance_points": [40.0, 60.0],
             "volume_window": [20, 50],
+            "rr": [1.5],
         }),
     ),
-    "opening_range_volume_breakout": _scaffold(
+    "opening_range_volume_breakout": _implemented_volume(
         "opening_range_volume_breakout",
         description="Opening range breakout con confirmacion de volumen OHLCV.",
         hypothesis="La ruptura del rango inicial requiere participacion superior al promedio.",
@@ -336,6 +364,7 @@ _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "opening_range_minutes": [15, 30],
             "rel_volume_threshold": [1.2, 1.5],
             "volume_window": [20, 50],
+            "rr": [1.5, 2.0],
         }),
     ),
     "volume_spike_mean_reversion": _scaffold(
@@ -367,20 +396,21 @@ _VOLUME_FAMILIES: dict[str, StrategyFamily] = {
 }
 
 _GAUSSIAN_VOLUME_FAMILIES: dict[str, StrategyFamily] = {
-    "gaussian_volume_breakout": _scaffold(
+    "gaussian_volume_breakout": _implemented_volume(
         "gaussian_volume_breakout",
         description="Breakout confirmado por z-score de volumen; no es order flow real.",
         hypothesis="Una ruptura con volumen estadisticamente alto tiene mejor aceptacion.",
         works_when="rango definido y volume_zscore alto sin extension excesiva",
         fails_when="spikes aislados o rupturas con volumen climatico de agotamiento",
-        main_params=("volume_window", "volume_zscore_threshold", "opening_range_minutes"),
+        main_params=("volume_window", "volume_zscore_threshold", "breakout_lookback"),
         parameter_grid=ParameterGrid({
             "volume_window": [20, 50],
             "volume_zscore_threshold": [1.5, 2.0],
-            "opening_range_minutes": [15, 30],
+            "breakout_lookback": [20, 30],
+            "rr": [1.5, 2.0],
         }),
     ),
-    "gaussian_volume_reversal": _scaffold(
+    "gaussian_volume_reversal": _implemented_volume(
         "gaussian_volume_reversal",
         description="Reversion con volumen estadisticamente extremo y rechazo.",
         hypothesis="Volumen muy lejos de su media movil puede marcar agotamiento.",
@@ -391,6 +421,7 @@ _GAUSSIAN_VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "volume_window": [20, 50],
             "volume_zscore_threshold": [2.0, 2.5],
             "rejection_close_pct": [0.55, 0.65],
+            "rr": [1.5],
         }),
     ),
     "gaussian_volume_climax": _scaffold(
@@ -406,7 +437,7 @@ _GAUSSIAN_VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "rejection_close_pct": [0.55, 0.65],
         }),
     ),
-    "gaussian_volume_dry_up_breakout": _scaffold(
+    "gaussian_volume_dry_up_breakout": _implemented_volume(
         "gaussian_volume_dry_up_breakout",
         description="Breakout tras dry-up estadistico de volumen.",
         hypothesis="Volumen bajo relativo a su distribucion puede preceder expansion.",
@@ -417,6 +448,7 @@ _GAUSSIAN_VOLUME_FAMILIES: dict[str, StrategyFamily] = {
             "volume_window": [20, 50],
             "dry_up_zscore_threshold": [-0.5, -1.0],
             "volume_zscore_threshold": [1.5, 2.0],
+            "breakout_lookback": [20],
         }),
     ),
     "gaussian_volume_trend_confirmation": _scaffold(

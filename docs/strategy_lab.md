@@ -136,6 +136,21 @@ Strategy Lab calculan media, desviacion estandar, volumen relativo y z-score
 usando barras pasadas (`shift(1)`) para que una barra no use informacion futura
 al clasificar su contexto.
 
+Desde Fase 10 hay un primer grupo ejecutable de familias OHLCV-only:
+
+- `relative_volume_breakout`
+- `volume_climax_reversal`
+- `volume_dry_up_breakout`
+- `opening_range_volume_breakout`
+- `gaussian_volume_breakout`
+- `gaussian_volume_reversal`
+- `gaussian_volume_dry_up_breakout`
+- `vwap_volume_reclaim`
+
+Estas estrategias no agregan datos nuevos ni conectan broker. Solo emiten
+senales de research/backtest sobre OHLCV 1m y luego pasan por filtros,
+Robustness Engine y Decision Engine.
+
 ## Uso
 
 Ejemplo en Windows PowerShell:
@@ -163,6 +178,19 @@ Las familias registradas se documentan en `docs/strategy_families.md`. Tambien
 se acepta el alias:
 
 - `daytrading_vwap_liquidity_rr2_no_midday_atr_filter`
+
+Ejemplo para una familia de volumen ejecutable:
+
+```powershell
+python scripts/run_strategy_search.py `
+  --symbol MNQ `
+  --data data/processed/MNQ_2024_01_2026_06_full_1m_ninjatrader_combined_clean.csv `
+  --family gaussian_volume_breakout `
+  --initial-capital 25000 `
+  --max-variants 12 `
+  --iterations 1000 `
+  --seed 42
+```
 
 ## Interpretacion de resultados
 

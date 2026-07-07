@@ -189,6 +189,17 @@ def test_family_registry_contains_requested_families():
         "gaussian_volume_mean_reversion",
         "gaussian_volume_expansion_continuation",
     }
+    implemented_volume_families = {
+        "relative_volume_breakout",
+        "volume_climax_reversal",
+        "volume_dry_up_breakout",
+        "opening_range_volume_breakout",
+        "vwap_volume_reclaim",
+        "gaussian_volume_breakout",
+        "gaussian_volume_reversal",
+        "gaussian_volume_dry_up_breakout",
+    }
+    scaffold_volume_families = (volume_families | gaussian_families) - implemented_volume_families
 
     available = set(available_families())
     assert requested.issubset(available)
@@ -197,8 +208,8 @@ def test_family_registry_contains_requested_families():
     assert get_family("daytrading_vwap_liquidity_rr2_no_midday_atr_filter").name == "rr2_atr_filter"
     assert get_family("opening_range_breakout").implemented is False
     assert get_family("vwap_mean_reversion").implemented is True
-    assert all(not get_family(name).implemented for name in volume_families)
-    assert all(not get_family(name).implemented for name in gaussian_families)
+    assert all(get_family(name).implemented for name in implemented_volume_families)
+    assert all(not get_family(name).implemented for name in scaffold_volume_families)
 
 
 def test_parameter_validation_rejects_empty_and_invalid_limits():
